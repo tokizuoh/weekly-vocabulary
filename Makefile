@@ -1,7 +1,7 @@
 .PHONY: up-dev, down, exec
 
 up-dev:
-	docker-compose up -d backend-development
+	docker-compose up -d backend-development mysql-development
 down:
 	docker compose down
 exec:
