@@ -1,5 +1,7 @@
 mod vocabulary;
 
 pub async fn run() -> String {
-    vocabulary::get_vocabulary().await
+    let latest_vocabulary = vocabulary::get_latest_vocabulary().await;
+
+    latest_vocabulary.spelling.clone()
 }
