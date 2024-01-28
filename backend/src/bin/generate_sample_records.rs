@@ -49,6 +49,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 "spelling" => v.spelling.clone(),
                 "meaning" => v.meaning.clone(),
                 "part_of_speech" => match v.part_of_speech {
+                    // TODO: commonize
                     PartOfSpeech::Noun => {"noun"},
                     PartOfSpeech::Pronoun => {"pronoun"},
                     PartOfSpeech::Adjective => {"adjectiv"},

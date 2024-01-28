@@ -15,6 +15,7 @@ services:
   mysql-development:
     image: mysql:8.3.0
     environment:
+      # TODO: replace .env
       - MYSQL_ROOT_PASSWORD="root-password"
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
