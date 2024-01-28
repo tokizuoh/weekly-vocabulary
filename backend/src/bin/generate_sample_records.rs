@@ -42,12 +42,22 @@ fn main() -> Result<(), Box<dyn Error>> {
     ];
 
     conn.exec_batch(
-        r"INSERT INTO vocabulary_list (spelling, meaning)
-        VALUES(:spelling, :meaning)",
+        r"INSERT INTO vocabulary_list (spelling, meaning, part_of_speech)
+        VALUES(:spelling, :meaning, :part_of_speech)",
         vocabulary_list.iter().map(|v| {
             params! {
                 "spelling" => v.spelling.clone(),
                 "meaning" => v.meaning.clone(),
+                "part_of_speech" => match v.part_of_speech {
+                    PartOfSpeech::Noun => {"noun"},
+                    PartOfSpeech::Pronoun => {"pronoun"},
+                    PartOfSpeech::Adjective => {"adjectiv"},
+                    PartOfSpeech::Verb => {"verb"},
+                    PartOfSpeech::Adverb => {"adverb"},
+                    PartOfSpeech::Preposition => {"preposition"},
+                    PartOfSpeech::Conjunction => {"conjunction"},
+                    PartOfSpeech::Interjection => {"interjection"},
+                }
             }
         }),
     )?;
