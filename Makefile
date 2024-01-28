@@ -1,7 +1,7 @@
 .PHONY: dup
 
-	docker-compose up -d backend-development
 up-dev:
+	docker-compose up -d backend-development
 down:
 	docker compose down
 exec:
