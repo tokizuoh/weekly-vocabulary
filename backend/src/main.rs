@@ -1,5 +1,5 @@
 use axum::{
-    routing::{get, post},
+    routing::{delete, get, post},
     Router,
 };
 
@@ -12,6 +12,8 @@ async fn main() {
         )
         .route("/get/all", post("TODO"))
         .route("/register", post("TODO"))
+        .route("/update", delete("TODO"))
+        .route("/delete", delete("TODO"));
     let lister = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
     axum::serve(lister, app).await.unwrap();
 }
