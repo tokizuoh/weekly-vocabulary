@@ -4,3 +4,5 @@
 up-dev:
 down:
 	docker compose down
+exec:
+	docker exec -it $(CONTAINER_ID) /bin/bash
