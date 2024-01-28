@@ -12,6 +12,6 @@ async fn main() {
         )
         .route("/get/vocabulary/all", post("TODO"))
         .route("/register/vocaburary", post("TODO"));
-    let lister = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    let lister = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
     axum::serve(lister, app).await.unwrap();
 }
