@@ -10,7 +10,7 @@ services:
     volumes:
       - ./:/app
     working_dir: /app/backend
-    command: /bin/sh -c "cargo watch -s 'cargo run'"
+    command: /bin/sh -c "cargo watch -s 'cargo run --bin run_server'"
 
   mysql-development:
     image: mysql:8.3.0
