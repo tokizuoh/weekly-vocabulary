@@ -1,3 +1,5 @@
+mod vocabulary;
+
 pub async fn run() -> String {
-    "Hello, World!".to_string()
+    vocabulary::get_vocabulary().await
 }
