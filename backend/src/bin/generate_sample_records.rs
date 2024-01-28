@@ -1,8 +1,10 @@
 use mysql::prelude::*;
 use mysql::*;
+use std::error::Error;
+use std::result::Result;
 use weekly_vocabulary::vocabulary::{PartOfSpeech, Vocabulary};
 
-fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<(), Box<dyn Error>> {
     let url = "mysql://user:password@localhost:3306/db";
     let pool = Pool::new(url)?;
 
