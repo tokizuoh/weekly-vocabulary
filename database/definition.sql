@@ -5,6 +5,6 @@ CREATE TABLE vocabulary_list (
     spelling VARCHAR(255) NOT NULL,
     meaning VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (id)
 );
