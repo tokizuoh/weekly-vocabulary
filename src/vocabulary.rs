@@ -15,11 +15,13 @@ pub struct Vocabulary {
     pub meaning: String,
 }
 
-pub async fn get_latest_vocabulary() -> Vocabulary {
+pub async fn get_latest_vocabulary() -> String {
     // TODO: get from DB
-    Vocabulary {
+    let vocabulary = Vocabulary {
         part_of_speech: PartOfSpeech::Verb,
         spelling: "transcribe".to_string(),
         meaning: "to write down something ecactly as it was said".to_string(),
-    }
+    };
+
+    vocabulary.spelling
 }
