@@ -6,6 +6,10 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     let url = "mysql://user:password@localhost:3306/db";
     let pool = Pool::new(url)?;
 
+    let mut conn = pool.get_conn()?;
+
+    conn.query_drop("TRUNCATE TABLE vocabulary_list")?;
+
     let vocabulary_list = vec![
         Vocabulary {
             part_of_speech: PartOfSpeech::Noun,
@@ -35,7 +39,6 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
         },
     ];
 
-    let mut conn = pool.get_conn()?;
     conn.exec_batch(
         r"INSERT INTO vocabulary_list (spelling, meaning)
         VALUES(:spelling, :meaning)",
