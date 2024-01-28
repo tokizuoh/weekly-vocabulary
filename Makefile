@@ -1,4 +1,4 @@
-.PHONY: dup
+.PHONY: up-dev, down, exec
 
 up-dev:
 	docker-compose up -d backend-development
