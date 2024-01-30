@@ -9,6 +9,21 @@ pub enum PartOfSpeech {
     Interjection,
 }
 
+impl PartOfSpeech {
+    pub fn text(&self) -> &str {
+        match self {
+            PartOfSpeech::Noun => "noun",
+            PartOfSpeech::Pronoun => "pronoun",
+            PartOfSpeech::Adjective => "adjectiv",
+            PartOfSpeech::Verb => "verb",
+            PartOfSpeech::Adverb => "adverb",
+            PartOfSpeech::Preposition => "preposition",
+            PartOfSpeech::Conjunction => "conjunction",
+            PartOfSpeech::Interjection => "interjection",
+        }
+    }
+}
+
 pub struct Vocabulary {
     pub part_of_speech: PartOfSpeech,
     pub spelling: String,

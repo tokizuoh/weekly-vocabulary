@@ -48,17 +48,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             params! {
                 "spelling" => v.spelling.clone(),
                 "meaning" => v.meaning.clone(),
-                "part_of_speech" => match v.part_of_speech {
-                    // TODO: commonize
-                    PartOfSpeech::Noun => {"noun"},
-                    PartOfSpeech::Pronoun => {"pronoun"},
-                    PartOfSpeech::Adjective => {"adjectiv"},
-                    PartOfSpeech::Verb => {"verb"},
-                    PartOfSpeech::Adverb => {"adverb"},
-                    PartOfSpeech::Preposition => {"preposition"},
-                    PartOfSpeech::Conjunction => {"conjunction"},
-                    PartOfSpeech::Interjection => {"interjection"},
-                }
+                "part_of_speech" => v.part_of_speech.text()
             }
         }),
     )?;
