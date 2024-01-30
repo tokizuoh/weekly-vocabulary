@@ -5,6 +5,7 @@ use std::result::Result;
 use weekly_vocabulary::vocabulary::{PartOfSpeech, Vocabulary};
 
 fn main() -> Result<(), Box<dyn Error>> {
+    // TODO: get from .env
     let url = "mysql://user:password@localhost:3306/db";
     let pool = Pool::new(url)?;
 
