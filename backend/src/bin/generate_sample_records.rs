@@ -1,3 +1,4 @@
+use dotenv;
 use mysql::prelude::*;
 use mysql::*;
 use std::error::Error;
@@ -5,11 +6,13 @@ use std::result::Result;
 use weekly_vocabulary::vocabulary::{PartOfSpeech, Vocabulary};
 
 fn main() -> Result<(), Box<dyn Error>> {
-    // TODO: get from .env
-    let url = "mysql://user:password@localhost:3306/db";
-    let pool = Pool::new(url)?;
+    // TODO: for production
+    dotenv::from_filename(".env.dev").ok();
 
-    let mut conn = pool.get_conn()?;
+    let url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let pool = Pool::new(url.as_str());
+
+    let mut conn = pool?.get_conn()?;
 
     conn.query_drop("TRUNCATE TABLE vocabulary_list")?;
 
