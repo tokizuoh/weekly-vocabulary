@@ -1,6 +1,6 @@
 use crate::{
     app_state::AppState,
-    vocabulary::{get_all_vocabulary, get_latest_vocabulary},
+    vocabulary::{get_all_vocabulary, get_latest_vocabulary, register_vocabulary},
 };
 use axum::{
     routing::{delete, get, post},
@@ -12,7 +12,7 @@ pub fn create_router(app_state: Arc<AppState>) -> Router {
     Router::new()
         .route("/get/recent", get(get_latest_vocabulary))
         .route("/get/all", get(get_all_vocabulary))
-        .route("/register", post("TODO"))
+        .route("/register", post(register_vocabulary))
         .route("/update", delete("TODO"))
         .route("/delete", delete("TODO"))
         .with_state(app_state)

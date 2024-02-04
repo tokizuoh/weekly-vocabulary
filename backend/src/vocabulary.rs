@@ -1,7 +1,7 @@
 use crate::app_state::AppState;
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 use mysql::{prelude::Queryable, *};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
 #[derive(Debug, Serialize)]
@@ -50,6 +50,13 @@ impl PartOfSpeech {
 #[derive(Debug, Serialize)]
 pub struct Vocabulary {
     pub part_of_speech: PartOfSpeech,
+    pub spelling: String,
+    pub meaning: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct VocabularyInput {
+    pub part_of_speech: String,
     pub spelling: String,
     pub meaning: String,
 }
@@ -126,6 +133,42 @@ pub async fn get_all_vocabulary(
             "total_count": result.len(),
         },
         "data": result,
+    });
+
+    Ok(Json(json_response))
+}
+
+pub async fn register_vocabulary(
+    State(data): State<Arc<AppState>>,
+    Json(body): Json<VocabularyInput>,
+) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
+    let mut conn = data.db.get_conn().unwrap();
+
+    match PartOfSpeech::from_string(body.part_of_speech.clone()) {
+        Ok(_) => {}
+        Err(_) => {
+            let error_response = serde_json::json!({
+                "status": "fail",
+                "message": format!("invalid part_of_speech: {}", body.part_of_speech),
+            });
+
+            return Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)));
+        }
+    };
+
+    conn.exec_drop(
+        r"INSERT INTO vocabulary_list (spelling, meaning, part_of_speech)
+            VALUES(:spelling, :meaning, :part_of_speech)",
+        params! {
+            "spelling" => body.spelling,
+            "meaning" => body.meaning,
+            "part_of_speech" => body.part_of_speech.clone()
+        },
+    );
+
+    // TODO: return payload
+    let json_response = serde_json::json!({
+        "ok": "ok"
     });
 
     Ok(Json(json_response))
