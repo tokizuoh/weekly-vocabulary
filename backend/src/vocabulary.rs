@@ -1,9 +1,7 @@
-use std::ptr::null;
-
-use axum::{http::StatusCode, response::IntoResponse, Json};
-use dotenv::dotenv;
+use crate::app_state::AppState;
+use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 use mysql::{prelude::Queryable, *};
-use serde_json::json;
+use std::sync::Arc;
 
 #[derive(Debug)]
 pub enum PartOfSpeech {
@@ -40,20 +38,9 @@ pub struct Vocabulary {
 }
 
 pub async fn get_latest_vocabulary(
+    State(data): State<Arc<AppState>>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
-    // TODO: commonize .env and .env.dev
-    dotenv::from_filename("./.env.dev").ok();
-
-    let url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let pool = Pool::new(url.as_str()).map_err(|e| {
-        let error_response = serde_json::json!({
-            "status": "fail",
-            "message": format!("Database error: {}", e),
-        });
-        (StatusCode::INTERNAL_SERVER_ERROR, Json(error_response))
-    })?;
-
-    let mut conn = pool.get_conn().unwrap();
+    let mut conn = data.db.get_conn().unwrap();
 
     let result = conn
         .query_map(
