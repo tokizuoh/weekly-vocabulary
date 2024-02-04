@@ -1,4 +1,3 @@
-use axum::{http::StatusCode, Json};
 use mysql::Pool;
 use std::sync::Arc;
 use weekly_vocabulary::{app_state::AppState, route::create_router};
