@@ -80,9 +80,11 @@ pub async fn get_latest_vocabulary(
 
     if let Some(vocabulary) = result.get(0) {
         let json_response = serde_json::json!({
-            "part_of_speech": vocabulary.part_of_speech.text(),
-            "spelling": vocabulary.spelling,
-            "meaning": vocabulary.meaning,
+            "data": {
+                "part_of_speech": vocabulary.part_of_speech.text(),
+                "spelling": vocabulary.spelling,
+                "meaning": vocabulary.meaning,
+            }
         });
 
         Ok(Json(json_response))
@@ -120,7 +122,10 @@ pub async fn get_all_vocabulary(
         })?;
 
     let json_response = serde_json::json!({
-            "vocabulary_list": result,
+        "metadata": {
+            "total_count": result.len(),
+        },
+        "data": result,
     });
 
     Ok(Json(json_response))
