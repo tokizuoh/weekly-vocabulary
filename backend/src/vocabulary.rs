@@ -31,6 +31,22 @@ impl PartOfSpeech {
     }
 }
 
+impl PartOfSpeech {
+    fn from_string(s: String) -> std::prelude::v1::Result<Self, ()> {
+        match s.to_lowercase().as_str() {
+            "noun" => Ok(PartOfSpeech::Noun),
+            "pronoun" => Ok(PartOfSpeech::Pronoun),
+            "adjective" => Ok(PartOfSpeech::Adjective),
+            "verb" => Ok(PartOfSpeech::Verb),
+            "adverb" => Ok(PartOfSpeech::Adverb),
+            "preposition" => Ok(PartOfSpeech::Preposition),
+            "conjunction" => Ok(PartOfSpeech::Conjunction),
+            "interjection" => Ok(PartOfSpeech::Interjection),
+            _ => Err(()),
+        }
+    }
+}
+
 #[derive(Debug, Serialize)]
 pub struct Vocabulary {
     pub part_of_speech: PartOfSpeech,
@@ -45,10 +61,10 @@ pub async fn get_latest_vocabulary(
 
     let result = conn
         .query_map(
-            "SELECT spelling, meaning FROM vocabulary_list ORDER BY id DESC LIMIT 1;",
-            |(spelling, meaning)| {
+            "SELECT spelling, meaning, part_of_speech FROM vocabulary_list ORDER BY id DESC LIMIT 1;",
+            |(spelling, meaning, part_of_speech)| {
                 Vocabulary {
-                    part_of_speech: PartOfSpeech::Verb, // TODO
+                    part_of_speech: PartOfSpeech::from_string(part_of_speech).unwrap(),
                     spelling: spelling,
                     meaning: meaning,
                 }
@@ -88,13 +104,11 @@ pub async fn get_all_vocabulary(
 
     let result = conn
         .query_map(
-            "SELECT spelling, meaning FROM vocabulary_list;",
-            |(spelling, meaning)| {
-                Vocabulary {
-                    part_of_speech: PartOfSpeech::Verb, // TODO
-                    spelling: spelling,
-                    meaning: meaning,
-                }
+            "SELECT spelling, meaning, part_of_speech FROM vocabulary_list;",
+            |(spelling, meaning, part_of_speech)| Vocabulary {
+                part_of_speech: PartOfSpeech::from_string(part_of_speech).unwrap(),
+                spelling: spelling,
+                meaning: meaning,
             },
         )
         .map_err(|e| {
