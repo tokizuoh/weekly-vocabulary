@@ -44,7 +44,7 @@ pub async fn get_latest_vocabulary(
 
     let result = conn
         .query_map(
-            "SELECT spelling, meaning FROM vocabulary_list ORDER BY created_at ASC LIMIT 1;",
+            "SELECT spelling, meaning FROM vocabulary_list ORDER BY id DESC LIMIT 1;",
             // |(_, spelling, meaning, _, _, _): (_, String, String, String, _, _)| {
             |(spelling, meaning)| {
                 Vocabulary {
