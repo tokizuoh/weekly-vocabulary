@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS vocabulary_list;
+DROP TABLE IF EXISTS vocabulary;
 
-CREATE TABLE vocabulary_list (
+CREATE TABLE vocabulary (
     id INT NOT NULL AUTO_INCREMENT,
     spelling VARCHAR(255) NOT NULL,
     meaning VARCHAR(255) NOT NULL,

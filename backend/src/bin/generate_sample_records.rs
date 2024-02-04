@@ -14,7 +14,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let mut conn = pool?.get_conn()?;
 
-    conn.query_drop("TRUNCATE TABLE vocabulary_list")?;
+    conn.query_drop("TRUNCATE TABLE vocabulary")?;
 
     let vocabulary_list = vec![
         Vocabulary {
@@ -46,7 +46,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     ];
 
     conn.exec_batch(
-        r"INSERT INTO vocabulary_list (spelling, meaning, part_of_speech)
+        r"INSERT INTO vocabulary (spelling, meaning, part_of_speech)
         VALUES(:spelling, :meaning, :part_of_speech)",
         vocabulary_list.iter().map(|v| {
             params! {

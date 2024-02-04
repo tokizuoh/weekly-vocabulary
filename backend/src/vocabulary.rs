@@ -68,13 +68,11 @@ pub async fn get_latest_vocabulary(
 
     let result = conn
         .query_map(
-            "SELECT spelling, meaning, part_of_speech FROM vocabulary_list ORDER BY id DESC LIMIT 1;",
-            |(spelling, meaning, part_of_speech)| {
-                Vocabulary {
-                    part_of_speech: PartOfSpeech::from_string(part_of_speech).unwrap(),
-                    spelling: spelling,
-                    meaning: meaning,
-                }
+            "SELECT spelling, meaning, part_of_speech FROM vocabulary ORDER BY id DESC LIMIT 1;",
+            |(spelling, meaning, part_of_speech)| Vocabulary {
+                part_of_speech: PartOfSpeech::from_string(part_of_speech).unwrap(),
+                spelling: spelling,
+                meaning: meaning,
             },
         )
         .map_err(|e| {
@@ -113,7 +111,7 @@ pub async fn get_all_vocabulary(
 
     let result = conn
         .query_map(
-            "SELECT spelling, meaning, part_of_speech FROM vocabulary_list;",
+            "SELECT spelling, meaning, part_of_speech FROM vocabulary;",
             |(spelling, meaning, part_of_speech)| Vocabulary {
                 part_of_speech: PartOfSpeech::from_string(part_of_speech).unwrap(),
                 spelling: spelling,
@@ -157,7 +155,7 @@ pub async fn register_vocabulary(
     };
 
     conn.exec_drop(
-        r"INSERT INTO vocabulary_list (spelling, meaning, part_of_speech)
+        r"INSERT INTO vocabulary (spelling, meaning, part_of_speech)
             VALUES(:spelling, :meaning, :part_of_speech)",
         params! {
             "spelling" => body.spelling,
