@@ -1,9 +1,10 @@
 use crate::app_state::AppState;
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 use mysql::{prelude::Queryable, *};
+use serde::Serialize;
 use std::sync::Arc;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub enum PartOfSpeech {
     Noun,
     Pronoun,
@@ -30,7 +31,7 @@ impl PartOfSpeech {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Vocabulary {
     pub part_of_speech: PartOfSpeech,
     pub spelling: String,
@@ -45,7 +46,6 @@ pub async fn get_latest_vocabulary(
     let result = conn
         .query_map(
             "SELECT spelling, meaning FROM vocabulary_list ORDER BY id DESC LIMIT 1;",
-            // |(_, spelling, meaning, _, _, _): (_, String, String, String, _, _)| {
             |(spelling, meaning)| {
                 Vocabulary {
                     part_of_speech: PartOfSpeech::Verb, // TODO
@@ -79,4 +79,35 @@ pub async fn get_latest_vocabulary(
 
         Err((StatusCode::OK, Json(json_response)))
     }
+}
+
+pub async fn get_all_vocabulary(
+    State(data): State<Arc<AppState>>,
+) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
+    let mut conn = data.db.get_conn().unwrap();
+
+    let result = conn
+        .query_map(
+            "SELECT spelling, meaning FROM vocabulary_list;",
+            |(spelling, meaning)| {
+                Vocabulary {
+                    part_of_speech: PartOfSpeech::Verb, // TODO
+                    spelling: spelling,
+                    meaning: meaning,
+                }
+            },
+        )
+        .map_err(|e| {
+            let error_response = serde_json::json!({
+                "status": "fail",
+                "message": format!("Database error: {}", e),
+            });
+            (StatusCode::INTERNAL_SERVER_ERROR, Json(error_response))
+        })?;
+
+    let json_response = serde_json::json!({
+            "vocabulary_list": result,
+    });
+
+    Ok(Json(json_response))
 }
