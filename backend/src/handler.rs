@@ -17,6 +17,14 @@ pub struct DeleteVocabularyInput {
     pub id: String,
 }
 
+#[derive(Debug, Deserialize)]
+pub struct UpdateVocabularyInput {
+    pub id: String,
+    pub part_of_speech: String,
+    pub spelling: String,
+    pub meaning: String,
+}
+
 pub async fn get_latest_vocabulary(
     State(data): State<Arc<AppState>>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
@@ -137,6 +145,42 @@ pub async fn delete_vocabulary(
     let _ = conn.exec_drop(
         r"DELETE FROM vocabulary WHERE id=(:id);",
         params! {
+            "id" => body.id,
+        },
+    );
+
+    // TODO: return payload
+    let json_response = serde_json::json!({
+        "ok": "ok"
+    });
+
+    Ok(Json(json_response))
+}
+
+pub async fn update_vocabulary(
+    State(data): State<Arc<AppState>>,
+    Json(body): Json<UpdateVocabularyInput>,
+) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
+    let mut conn = data.db.get_conn().unwrap();
+
+    let part_of_speech = match PartOfSpeech::from_string(body.part_of_speech.clone()) {
+        Ok(value) => value,
+        Err(_) => {
+            let error_response = serde_json::json!({
+                "status": "fail",
+                "message": format!("invalid part_of_speech: {}", body.part_of_speech),
+            });
+
+            return Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)));
+        }
+    };
+
+    let _ = conn.exec_drop(
+        r"UPDATE vocabulary SET spelling=(:spelling), meaning=(:meaning), part_of_speech=(:part_of_speech), updated_at=CURTIME() WHERE id=(:id);",
+        params! {
+            "spelling" => body.spelling,
+            "meaning" => body.meaning,
+            "part_of_speech" => part_of_speech.text(),
             "id" => body.id,
         },
     );
