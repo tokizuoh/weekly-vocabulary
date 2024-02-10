@@ -41,7 +41,6 @@ pub async fn get_latest_vocabulary(
         )
         .map_err(|e| {
             let error_response = serde_json::json!({
-                "status": "fail",
                 "message": format!("Database error: {}", e),
             });
             (StatusCode::INTERNAL_SERVER_ERROR, Json(error_response))
@@ -60,7 +59,6 @@ pub async fn get_latest_vocabulary(
     } else {
         // TODO: empty
         let json_response = serde_json::json!({
-            "status": "ok",
             "message": "Empty",
         });
 
@@ -84,7 +82,6 @@ pub async fn get_all_vocabulary(
         )
         .map_err(|e| {
             let error_response = serde_json::json!({
-                "status": "fail",
                 "message": format!("Database error: {}", e),
             });
             (StatusCode::INTERNAL_SERVER_ERROR, Json(error_response))
@@ -110,7 +107,6 @@ pub async fn register_vocabulary(
         Ok(_) => {}
         Err(_) => {
             let error_response = serde_json::json!({
-                "status": "fail",
                 "message": format!("invalid part_of_speech: {}", body.part_of_speech),
             });
 
@@ -167,7 +163,6 @@ pub async fn update_vocabulary(
         Ok(value) => value,
         Err(_) => {
             let error_response = serde_json::json!({
-                "status": "fail",
                 "message": format!("invalid part_of_speech: {}", body.part_of_speech),
             });
 
@@ -186,14 +181,12 @@ pub async fn update_vocabulary(
     ) {
         Ok(_) => {
             let json_response = serde_json::json!({
-               "status": "success",
                "message": "Vocabulary updated successfully"
             });
            Ok(Json(json_response))
         }
         Err(e) => {
             let error_response = serde_json::json!({
-                "status": "failure",
                 "message": format!("Failed to update vocabulary: {}", e),
             });
             Err((StatusCode::BAD_REQUEST, Json(error_response)))
