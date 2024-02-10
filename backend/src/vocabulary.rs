@@ -61,6 +61,11 @@ pub struct VocabularyInput {
     pub meaning: String,
 }
 
+#[derive(Debug, Deserialize)]
+pub struct DeleteVocabularyInput {
+    pub id: String,
+}
+
 pub async fn get_latest_vocabulary(
     State(data): State<Arc<AppState>>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
@@ -161,6 +166,27 @@ pub async fn register_vocabulary(
             "spelling" => body.spelling,
             "meaning" => body.meaning,
             "part_of_speech" => body.part_of_speech.clone()
+        },
+    );
+
+    // TODO: return payload
+    let json_response = serde_json::json!({
+        "ok": "ok"
+    });
+
+    Ok(Json(json_response))
+}
+
+pub async fn delete_vocabulary(
+    State(data): State<Arc<AppState>>,
+    Json(body): Json<DeleteVocabularyInput>,
+) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
+    let mut conn = data.db.get_conn().unwrap();
+
+    let _ = conn.exec_drop(
+        r"DELETE FROM vocabulary WHERE id=(:id);",
+        params! {
+            "id" => body.id,
         },
     );
 
