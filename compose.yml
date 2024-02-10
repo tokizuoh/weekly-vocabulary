@@ -3,7 +3,7 @@ version: "3.8"
 services:
   backend-development:
     build:
-      context: ./backend
+      context: ./application
       dockerfile: Dockerfile.dev
     container_name: backend-development
     depends_on:
@@ -15,7 +15,7 @@ services:
       - "8080:8080"
     volumes:
       - ./:/app
-    working_dir: /app/backend
+    working_dir: /app/application
     command: /bin/sh -c "cargo run --bin generate_sample_records && cargo watch -s 'cargo run --bin run_server'"
     networks:
       - development
