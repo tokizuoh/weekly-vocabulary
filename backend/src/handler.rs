@@ -57,12 +57,11 @@ pub async fn get_latest_vocabulary(
 
         Ok(Json(json_response))
     } else {
-        // TODO: empty
         let json_response = serde_json::json!({
-            "message": "Empty",
+            "message": "Resource not found",
         });
 
-        Err((StatusCode::OK, Json(json_response)))
+        Err((StatusCode::NOT_FOUND, Json(json_response)))
     }
 }
 
