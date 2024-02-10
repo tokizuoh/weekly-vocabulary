@@ -1,11 +1,11 @@
+use dotenv;
 use mysql::Pool;
 use std::sync::Arc;
 use weekly_vocabulary::{app_state::AppState, route::create_router};
 
 #[tokio::main]
 async fn main() {
-    // TODO: commonize .env and .env.dev
-    dotenv::from_filename("./.env.dev").ok();
+    dotenv::dotenv().ok();
 
     let url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let pool = match Pool::new(url.as_str()) {

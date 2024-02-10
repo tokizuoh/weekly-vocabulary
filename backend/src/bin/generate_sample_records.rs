@@ -6,8 +6,7 @@ use std::result::Result;
 use weekly_vocabulary::vocabulary::{PartOfSpeech, Vocabulary};
 
 fn main() -> Result<(), Box<dyn Error>> {
-    // TODO: for production
-    dotenv::from_filename(".env.dev").ok();
+    dotenv::dotenv().ok();
 
     let url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let pool = Pool::new(url.as_str());
