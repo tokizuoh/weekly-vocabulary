@@ -109,7 +109,7 @@ pub async fn register_vocabulary(
                 "message": format!("Invalid part_of_speech: {}", body.part_of_speech),
             });
 
-            return Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)));
+            return Err((StatusCode::BAD_REQUEST, Json(error_response)));
         }
     };
 
@@ -134,7 +134,7 @@ pub async fn register_vocabulary(
                 "message": format!("Failed to update vocabulary: {}", e),
             });
 
-            Err((StatusCode::BAD_REQUEST, Json(error_response)))
+            Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)))
         }
     }
 }
@@ -163,7 +163,7 @@ pub async fn delete_vocabulary(
                 "message": format!("Failed to update vocabulary: {}", e),
             });
 
-            Err((StatusCode::BAD_REQUEST, Json(error_response)))
+            Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)))
         }
     }
 }
@@ -181,7 +181,7 @@ pub async fn update_vocabulary(
                 "message": format!("Invalid part_of_speech: {}", body.part_of_speech),
             });
 
-            return Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)));
+            return Err((StatusCode::BAD_REQUEST, Json(error_response)));
         }
     };
 
@@ -206,7 +206,7 @@ pub async fn update_vocabulary(
                 "message": format!("Failed to update vocabulary: {}", e),
             });
             
-            Err((StatusCode::BAD_REQUEST, Json(error_response)))
+            Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)))
         }
     }
 }
