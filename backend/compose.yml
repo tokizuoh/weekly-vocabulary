@@ -1,11 +1,11 @@
 version: "3.8"
 
 services:
-  backend-development:
+  application-development:
     build:
       context: ./application
       dockerfile: Dockerfile.dev
-    container_name: backend-development
+    container_name: application-development
     depends_on:
       mysql-development:
         condition: service_healthy
