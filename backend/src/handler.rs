@@ -114,7 +114,7 @@ pub async fn register_vocabulary(
         }
     };
 
-    let _ = conn.exec_drop(
+    match conn.exec_drop(
         r"INSERT INTO vocabulary (spelling, meaning, part_of_speech)
             VALUES(:spelling, :meaning, :part_of_speech)",
         params! {
@@ -122,14 +122,20 @@ pub async fn register_vocabulary(
             "meaning" => body.meaning,
             "part_of_speech" => body.part_of_speech.clone()
         },
-    );
-
-    // TODO: return payload
-    let json_response = serde_json::json!({
-        "ok": "ok"
-    });
-
-    Ok(Json(json_response))
+    ) {
+        Ok(_) => {
+            let json_response = serde_json::json!({
+               "message": "Vocabulary registered successfully"
+            });
+            Ok(Json(json_response))
+        }
+        Err(e) => {
+            let error_response = serde_json::json!({
+                "message": format!("Failed to update vocabulary: {}", e),
+            });
+            Err((StatusCode::BAD_REQUEST, Json(error_response)))
+        }
+    }
 }
 
 pub async fn delete_vocabulary(
@@ -138,19 +144,25 @@ pub async fn delete_vocabulary(
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
     let mut conn = data.db.get_conn().unwrap();
 
-    let _ = conn.exec_drop(
+    match conn.exec_drop(
         r"DELETE FROM vocabulary WHERE id=(:id);",
         params! {
             "id" => body.id,
         },
-    );
-
-    // TODO: return payload
-    let json_response = serde_json::json!({
-        "ok": "ok"
-    });
-
-    Ok(Json(json_response))
+    ) {
+        Ok(_) => {
+            let json_response = serde_json::json!({
+               "message": "Vocabulary deleted successfully"
+            });
+            Ok(Json(json_response))
+        }
+        Err(e) => {
+            let error_response = serde_json::json!({
+                "message": format!("Failed to update vocabulary: {}", e),
+            });
+            Err((StatusCode::BAD_REQUEST, Json(error_response)))
+        }
+    }
 }
 
 pub async fn update_vocabulary(
