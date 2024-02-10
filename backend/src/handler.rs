@@ -6,7 +6,7 @@ use serde::Deserialize;
 use std::sync::Arc;
 
 #[derive(Debug, Deserialize)]
-pub struct VocabularyInput {
+pub struct RegisterVocabularyInput {
     pub part_of_speech: String,
     pub spelling: String,
     pub meaning: String,
@@ -99,7 +99,7 @@ pub async fn get_all_vocabulary(
 
 pub async fn register_vocabulary(
     State(data): State<Arc<AppState>>,
-    Json(body): Json<VocabularyInput>,
+    Json(body): Json<RegisterVocabularyInput>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
     let mut conn = data.db.get_conn().unwrap();
 
