@@ -126,12 +126,14 @@ pub async fn register_vocabulary(
             let json_response = serde_json::json!({
                "message": "Vocabulary registered successfully"
             });
+
             Ok(Json(json_response))
         }
         Err(e) => {
             let error_response = serde_json::json!({
                 "message": format!("Failed to update vocabulary: {}", e),
             });
+
             Err((StatusCode::BAD_REQUEST, Json(error_response)))
         }
     }
@@ -153,12 +155,14 @@ pub async fn delete_vocabulary(
             let json_response = serde_json::json!({
                "message": "Vocabulary deleted successfully"
             });
+
             Ok(Json(json_response))
         }
         Err(e) => {
             let error_response = serde_json::json!({
                 "message": format!("Failed to update vocabulary: {}", e),
             });
+
             Err((StatusCode::BAD_REQUEST, Json(error_response)))
         }
     }
@@ -194,12 +198,14 @@ pub async fn update_vocabulary(
             let json_response = serde_json::json!({
                "message": "Vocabulary updated successfully"
             });
+
            Ok(Json(json_response))
         }
         Err(e) => {
             let error_response = serde_json::json!({
                 "message": format!("Failed to update vocabulary: {}", e),
             });
+            
             Err((StatusCode::BAD_REQUEST, Json(error_response)))
         }
     }
