@@ -6,6 +6,9 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
     container_name: backend-development
+    depends_on:
+      mysql-development:
+        condition: service_healthy
     env_file:
       - ./.env.dev
     ports:
@@ -24,3 +27,7 @@ services:
       - "3306:3306"
     volumes:
       - ./database:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 15s
+      retries: 5
