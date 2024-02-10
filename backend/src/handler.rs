@@ -175,7 +175,7 @@ pub async fn update_vocabulary(
         }
     };
 
-    let _ = conn.exec_drop(
+    match conn.exec_drop(
         r"UPDATE vocabulary SET spelling=(:spelling), meaning=(:meaning), part_of_speech=(:part_of_speech), updated_at=CURTIME() WHERE id=(:id);",
         params! {
             "spelling" => body.spelling,
@@ -183,12 +183,20 @@ pub async fn update_vocabulary(
             "part_of_speech" => part_of_speech.text(),
             "id" => body.id,
         },
-    );
-
-    // TODO: return payload
-    let json_response = serde_json::json!({
-        "ok": "ok"
-    });
-
-    Ok(Json(json_response))
+    ) {
+        Ok(_) => {
+            let json_response = serde_json::json!({
+               "status": "success",
+               "message": "Vocabulary updated successfully"
+            });
+           Ok(Json(json_response))
+        }
+        Err(e) => {
+            let error_response = serde_json::json!({
+                "status": "failure",
+                "message": format!("Failed to update vocabulary: {}", e),
+            });
+            Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)))
+        }
+    }
 }
