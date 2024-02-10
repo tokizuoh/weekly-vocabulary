@@ -17,6 +17,8 @@ services:
       - ./:/app
     working_dir: /app/backend
     command: /bin/sh -c "cargo watch -s 'cargo run --bin run_server'"
+    networks:
+      - development
 
   mysql-development:
     image: mysql:8.3.0
@@ -27,7 +29,12 @@ services:
       - "3306:3306"
     volumes:
       - ./database:/docker-entrypoint-initdb.d
+    networks:
+      - development
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 15s
       retries: 5
+
+networks:
+  development:
