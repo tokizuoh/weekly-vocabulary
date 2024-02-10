@@ -1,8 +1,6 @@
 use crate::{
     app_state::AppState,
-    vocabulary::{
-        delete_vocabulary, get_all_vocabulary, get_latest_vocabulary, register_vocabulary,
-    },
+    handler::{delete_vocabulary, get_all_vocabulary, get_latest_vocabulary, register_vocabulary},
 };
 use axum::{
     routing::{delete, get, post},
