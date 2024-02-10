@@ -107,7 +107,7 @@ pub async fn register_vocabulary(
         Ok(_) => {}
         Err(_) => {
             let error_response = serde_json::json!({
-                "message": format!("invalid part_of_speech: {}", body.part_of_speech),
+                "message": format!("Invalid part_of_speech: {}", body.part_of_speech),
             });
 
             return Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)));
@@ -175,7 +175,7 @@ pub async fn update_vocabulary(
         Ok(value) => value,
         Err(_) => {
             let error_response = serde_json::json!({
-                "message": format!("invalid part_of_speech: {}", body.part_of_speech),
+                "message": format!("Invalid part_of_speech: {}", body.part_of_speech),
             });
 
             return Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)));
