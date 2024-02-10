@@ -196,7 +196,7 @@ pub async fn update_vocabulary(
                 "status": "failure",
                 "message": format!("Failed to update vocabulary: {}", e),
             });
-            Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)))
+            Err((StatusCode::BAD_REQUEST, Json(error_response)))
         }
     }
 }
