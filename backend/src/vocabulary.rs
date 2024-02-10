@@ -154,7 +154,7 @@ pub async fn register_vocabulary(
         }
     };
 
-    conn.exec_drop(
+    let _ = conn.exec_drop(
         r"INSERT INTO vocabulary (spelling, meaning, part_of_speech)
             VALUES(:spelling, :meaning, :part_of_speech)",
         params! {
