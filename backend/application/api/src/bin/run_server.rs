@@ -1,7 +1,7 @@
+use api::{app_state::AppState, route::create_router};
 use dotenv;
 use mysql::Pool;
 use std::sync::Arc;
-use weekly_vocabulary::{app_state::AppState, route::create_router};
 
 #[tokio::main]
 async fn main() {

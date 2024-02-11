@@ -1,9 +1,9 @@
+use api::vocabulary::{PartOfSpeech, Vocabulary};
 use dotenv;
 use mysql::prelude::*;
 use mysql::*;
 use std::error::Error;
 use std::result::Result;
-use weekly_vocabulary::vocabulary::{PartOfSpeech, Vocabulary};
 
 fn main() -> Result<(), Box<dyn Error>> {
     dotenv::dotenv().ok();
