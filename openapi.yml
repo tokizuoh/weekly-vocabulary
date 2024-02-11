@@ -1,0 +1,27 @@
+oenapi: 3.0.3
+info:
+  title: "weekend-vocabulary"
+  description: |
+    This API allows ...
+  version: "1.0.0"
+paths:
+  /get/recent:
+    get:
+      responses:
+        "200":
+          description: "Get recently regisitered vocabulary"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  part_of_speech:
+                    type: string
+                  spelling:
+                    type: string
+                  meaning:
+                    type: string
+        "404":
+          description: "Not Found"
+        "500":
+          description: "Internal Server Error"
