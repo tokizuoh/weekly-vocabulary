@@ -19,7 +19,7 @@ paths:
           $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalServerError"
-  /get/all:
+  /vocabulary/all:
     get:
       description: "Return all regisitered vocabulary list"
       responses:

@@ -34,19 +34,6 @@ pub enum DeleteIdDeleteResponse {
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
-pub enum GetAllGetResponse {
-    /// ok response
-    Status200_OkResponse
-    (models::AllVocabularyResponse)
-    ,
-    /// Internal Server Error
-    Status500_InternalServerError
-    (models::Error)
-}
-
-        #[derive(Debug, PartialEq, Serialize, Deserialize)]
-#[must_use]
-#[allow(clippy::large_enum_variant)]
 pub enum RegisterPostResponse {
     /// ok response
     Status201_OkResponse
@@ -72,6 +59,19 @@ pub enum UpdatePutResponse {
     /// Bad Request
     Status400_BadRequest
     (models::Error)
+    ,
+    /// Internal Server Error
+    Status500_InternalServerError
+    (models::Error)
+}
+
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum VocabularyAllGetResponse {
+    /// ok response
+    Status200_OkResponse
+    (models::AllVocabularyResponse)
     ,
     /// Internal Server Error
     Status500_InternalServerError
@@ -111,15 +111,6 @@ pub trait Api {
                 ) -> Result<DeleteIdDeleteResponse, String>;
 
 
-                /// GetAllGet - GET /get/all
-                async fn get_all_get(
-                &self,
-                method: Method,
-                host: Host,
-                cookies: CookieJar,
-                ) -> Result<GetAllGetResponse, String>;
-
-
                 /// RegisterPost - POST /register
                 async fn register_post(
                 &self,
@@ -138,6 +129,15 @@ pub trait Api {
                 cookies: CookieJar,
                         body: Option<models::UpdateVocabularyRequestBody>,
                 ) -> Result<UpdatePutResponse, String>;
+
+
+                /// VocabularyAllGet - GET /vocabulary/all
+                async fn vocabulary_all_get(
+                &self,
+                method: Method,
+                host: Host,
+                cookies: CookieJar,
+                ) -> Result<VocabularyAllGetResponse, String>;
 
 
                 /// VocabularyRecentGet - GET /vocabulary/recent

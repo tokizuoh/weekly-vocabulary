@@ -11,7 +11,7 @@ curl-get-recent:
 	localhost:8080/vocabulary/recent
 curl-get-all:
 	curl --dump-header - \
-	localhost:8080/get/all
+	localhost:8080/vocabulary/all
 curl-register:
 	curl --dump-header - \
 	-X POST \

@@ -3,7 +3,7 @@ use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use generated::{
     models::{self, AllVocabularyResponse, RecentlyVocabularyResponse, Vocabulary},
-    DeleteIdDeleteResponse, GetAllGetResponse, RegisterPostResponse, UpdatePutResponse,
+    DeleteIdDeleteResponse, RegisterPostResponse, UpdatePutResponse, VocabularyAllGetResponse,
     VocabularyRecentGetResponse,
 };
 use mysql::{params, prelude::Queryable, Pool};
@@ -71,12 +71,12 @@ impl generated::Api for Api {
         }
     }
 
-    async fn get_all_get(
+    async fn vocabulary_all_get(
         &self,
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-    ) -> Result<GetAllGetResponse, String> {
+    ) -> Result<VocabularyAllGetResponse, String> {
         let mut conn = self.db.get_conn().unwrap();
 
         let result = conn.query_map(
@@ -90,13 +90,13 @@ impl generated::Api for Api {
         );
 
         match result {
-            Ok(list) => Ok(GetAllGetResponse::Status200_OkResponse(
+            Ok(list) => Ok(VocabularyAllGetResponse::Status200_OkResponse(
                 AllVocabularyResponse {
                     vocabulary_list: list.clone(),
                     total_count: list.len() as i32,
                 },
             )),
-            Err(e) => Ok(GetAllGetResponse::Status500_InternalServerError(
+            Err(e) => Ok(VocabularyAllGetResponse::Status500_InternalServerError(
                 generated::models::Error {
                     message: Some(e.to_string()),
                 },
