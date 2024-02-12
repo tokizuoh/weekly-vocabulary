@@ -61,6 +61,23 @@ pub enum RegisterPutResponse {
     (models::Error)
 }
 
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum UpdatePutResponse {
+    /// ok response
+    Status200_OkResponse
+    (models::UpdateVocabularyOkResponse)
+    ,
+    /// Bad Request
+    Status400_BadRequest
+    (models::Error)
+    ,
+    /// Internal Server Error
+    Status500_InternalServerError
+    (models::Error)
+}
+
 
 /// API
 #[async_trait]
@@ -93,6 +110,16 @@ pub trait Api {
                 cookies: CookieJar,
                         body: Option<models::RegisterVocabularyRequestBody>,
                 ) -> Result<RegisterPutResponse, String>;
+
+
+                /// UpdatePut - PUT /update
+                async fn update_put(
+                &self,
+                method: Method,
+                host: Host,
+                cookies: CookieJar,
+                        body: Option<models::UpdateVocabularyRequestBody>,
+                ) -> Result<UpdatePutResponse, String>;
 
 }
 

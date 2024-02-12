@@ -3,7 +3,7 @@ use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use generated::{
     models::{self, AllVocabularyResponse, RecentlyVocabularyResponse, Vocabulary},
-    GetAllGetResponse, GetRecentGetResponse, RegisterPutResponse,
+    GetAllGetResponse, GetRecentGetResponse, RegisterPutResponse, UpdatePutResponse,
 };
 use mysql::{params, prelude::Queryable, Pool};
 
@@ -151,6 +151,62 @@ impl generated::Api for Api {
                 },
             )),
             Err(e) => Ok(RegisterPutResponse::Status500_InternalServerError(
+                models::Error {
+                    message: Some(format!("Failed to update vocabulary: {}", e)),
+                },
+            )),
+        }
+    }
+
+    async fn update_put(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        body: Option<models::UpdateVocabularyRequestBody>,
+    ) -> Result<UpdatePutResponse, String> {
+        let body = match body {
+            Some(body) => body,
+            None => {
+                return Ok(UpdatePutResponse::Status400_BadRequest(
+                    generated::models::Error { message: None },
+                ));
+            }
+        };
+
+        let mut conn = self.db.get_conn().unwrap();
+
+        let vocabulary = Vocabulary {
+            meaning: body.vocabulary.meaning,
+            id: Some(body.vocabulary.id),
+            part_of_speech: body.vocabulary.part_of_speech,
+            spelling: body.vocabulary.spelling,
+        };
+
+        match vocabulary.validate() {
+            true => {}
+            false => {
+                return Ok(UpdatePutResponse::Status400_BadRequest(
+                    generated::models::Error { message: None },
+                ));
+            }
+        }
+
+        match conn.exec_drop(
+        r"UPDATE vocabulary SET spelling=(:spelling), meaning=(:meaning), part_of_speech=(:part_of_speech), updated_at=CURTIME() WHERE id=(:id);",
+            params! {
+                "spelling" => vocabulary.spelling,
+                "meaning" => vocabulary.meaning,
+                "part_of_speech" => vocabulary.part_of_speech,
+                "id" => vocabulary.id,
+            },
+        ) {
+            Ok(_) => Ok(UpdatePutResponse::Status200_OkResponse(
+                models::UpdateVocabularyOkResponse {
+                    message: "Resource updated successfully".to_string(),
+                },
+            )),
+            Err(e) => Ok(UpdatePutResponse::Status500_InternalServerError(
                 models::Error {
                     message: Some(format!("Failed to update vocabulary: {}", e)),
                 },

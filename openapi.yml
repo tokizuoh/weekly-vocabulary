@@ -51,6 +51,26 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "500":
           $ref: "#/components/responses/InternalServerError"
+  /update:
+    put:
+      description: "Update vocabulary"
+      requestBody:
+        description: "vocabulary"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateVocabularyRequestBody"
+      responses:
+        "200":
+          description: "ok response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateVocabularyOkResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 components:
   responses:
     NotFound:
@@ -144,6 +164,44 @@ components:
       required:
         - vocabulary
     RegisterVocabularyOkResponse:
+      properties:
+        message:
+          type: string
+      required:
+        - message
+    UpdateVocabularyInput:
+      properties:
+        id:
+          type: integer
+        part_of_speech:
+          type: string
+          enum:
+            [
+              noun,
+              pronoun,
+              adjective,
+              verb,
+              adverb,
+              preposition,
+              conjunction,
+              interjection,
+            ]
+        spelling:
+          type: string
+        meaning:
+          type: string
+      required:
+        - id
+        - part_of_speech
+        - spelling
+        - meaning
+    UpdateVocabularyRequestBody:
+      properties:
+        vocabulary:
+          $ref: "#/components/schemas/UpdateVocabularyInput"
+      required:
+        - vocabulary
+    UpdateVocabularyOkResponse:
       properties:
         message:
           type: string

@@ -12,9 +12,15 @@ curl-get-recent:
 curl-get-all:
 	curl --dump-header - \
 	localhost:8080/get/all
-curl-put:
+curl-register:
 	curl --dump-header - \
 	-X PUT \
 	-H "Content-Type: application/json" \
 	-d '{ "vocabulary": { "spelling": "run", "meaning": "moved at a speed faster than a walk", "part_of_speech": "verb" } }' \
 	localhost:8080/register
+curl-update:
+	curl --dump-header - \
+	-X PUT \
+	-H "Content-Type: application/json" \
+	-d '{ "vocabulary": { "id": 2, "spelling": "CHANGED-SPELLING", "meaning": "CHANGED-MEANING", "part_of_speech": "interjection" } }' \
+	localhost:8080/update
