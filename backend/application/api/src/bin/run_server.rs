@@ -1,7 +1,6 @@
-use api::{app_state::AppState, route::create_router};
+use api::controller;
 use dotenv;
 use mysql::Pool;
-use std::sync::Arc;
 
 #[tokio::main]
 async fn main() {
@@ -16,8 +15,8 @@ async fn main() {
         }
     };
 
-    let app_state = Arc::new(AppState { db: pool.clone() });
-    let app = create_router(app_state);
+    let api = controller::Api { db: pool };
+    let router = generated::server::new(api);
     let lister = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
-    axum::serve(lister, app).await.unwrap();
+    axum::serve(lister, router).await.unwrap();
 }
