@@ -8,15 +8,15 @@ use crate::header;
 use crate::{models, types::*};
 
       
+      
     #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
     #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))] 
-    pub struct DeleteIdDeletePathParams {
+    pub struct VocabularyIdDeletePathParams {
             /// Vocabulary ID
                 pub id: i32,
     }
 
 
-      
       
       
       

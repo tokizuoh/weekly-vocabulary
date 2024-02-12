@@ -17,14 +17,10 @@ pub const API_VERSION: &str = "1.0.0";
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
-pub enum DeleteIdDeleteResponse {
+pub enum VocabularyAllGetResponse {
     /// ok response
     Status200_OkResponse
-    (models::DeleteVocabularyOkResponse)
-    ,
-    /// Bad Request
-    Status400_BadRequest
-    (models::Error)
+    (models::AllVocabularyResponse)
     ,
     /// Internal Server Error
     Status500_InternalServerError
@@ -34,10 +30,14 @@ pub enum DeleteIdDeleteResponse {
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
-pub enum VocabularyAllGetResponse {
+pub enum VocabularyIdDeleteResponse {
     /// ok response
     Status200_OkResponse
-    (models::AllVocabularyResponse)
+    (models::DeleteVocabularyOkResponse)
+    ,
+    /// Bad Request
+    Status400_BadRequest
+    (models::Error)
     ,
     /// Internal Server Error
     Status500_InternalServerError
@@ -101,16 +101,6 @@ pub enum VocabularyRecentGetResponse {
 #[allow(clippy::ptr_arg)]
 pub trait Api {
 
-                /// DeleteIdDelete - DELETE /delete/{id}
-                async fn delete_id_delete(
-                &self,
-                method: Method,
-                host: Host,
-                cookies: CookieJar,
-                  path_params: models::DeleteIdDeletePathParams,
-                ) -> Result<DeleteIdDeleteResponse, String>;
-
-
                 /// VocabularyAllGet - GET /vocabulary/all
                 async fn vocabulary_all_get(
                 &self,
@@ -118,6 +108,16 @@ pub trait Api {
                 host: Host,
                 cookies: CookieJar,
                 ) -> Result<VocabularyAllGetResponse, String>;
+
+
+                /// VocabularyIdDelete - DELETE /vocabulary/{id}
+                async fn vocabulary_id_delete(
+                &self,
+                method: Method,
+                host: Host,
+                cookies: CookieJar,
+                  path_params: models::VocabularyIdDeletePathParams,
+                ) -> Result<VocabularyIdDeleteResponse, String>;
 
 
                 /// VocabularyPost - POST /vocabulary
