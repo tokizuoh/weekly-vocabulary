@@ -13,6 +13,7 @@ use crate::{header, types::*};
 use crate::models;
 
 use crate::{Api,
+     DeleteDeleteResponse,
      GetAllGetResponse,
      GetRecentGetResponse,
      RegisterPutResponse,
@@ -27,6 +28,9 @@ where
 {
     // build our application with a route
     Router::new()
+        .route("/delete",
+            delete(delete_delete::<I, A>)
+        )
         .route("/get/all",
             get(get_all_get::<I, A>)
         )
@@ -40,6 +44,140 @@ where
             put(update_put::<I, A>)
         )
         .with_state(api_impl)
+}
+
+    #[derive(validator::Validate)]
+    #[allow(dead_code)]
+    struct DeleteDeleteBodyValidator<'a> {
+            #[validate]
+          body: &'a models::DeleteVocabularyRequestBody,
+    }
+
+
+#[tracing::instrument(skip_all)]
+fn delete_delete_validation(
+        body: Option<models::DeleteVocabularyRequestBody>,
+) -> std::result::Result<(
+        Option<models::DeleteVocabularyRequestBody>,
+), ValidationErrors>
+{
+            if let Some(body) = &body {
+              let b = DeleteDeleteBodyValidator { body };
+              b.validate()?;
+            }
+
+Ok((
+    body,
+))
+}
+
+/// DeleteDelete - DELETE /delete
+#[tracing::instrument(skip_all)]
+async fn delete_delete<I, A>(
+  method: Method,
+  host: Host,
+  cookies: CookieJar,
+ State(api_impl): State<I>,
+          Json(body): Json<Option<models::DeleteVocabularyRequestBody>>,
+) -> Result<Response, StatusCode>
+where 
+    I: AsRef<A> + Send + Sync,
+    A: Api,
+{
+
+      #[allow(clippy::redundant_closure)]
+      let validation = tokio::task::spawn_blocking(move || 
+    delete_delete_validation(
+          body,
+    )
+  ).await.unwrap();
+
+  let Ok((
+      body,
+  )) = validation else {
+    return Response::builder()
+            .status(StatusCode::BAD_REQUEST)
+            .body(Body::from(validation.unwrap_err().to_string()))
+            .map_err(|_| StatusCode::BAD_REQUEST); 
+  };
+
+  let result = api_impl.as_ref().delete_delete(
+      method,
+      host,
+      cookies,
+              body,
+  ).await;
+
+  let mut response = Response::builder();
+
+  let resp = match result {
+                                            Ok(rsp) => match rsp {
+                                                DeleteDeleteResponse::Status200_OkResponse
+                                                    (body)
+                                                => {
+
+                                                  let mut response = response.status(200);
+                                                  {
+                                                    let mut response_headers = response.headers_mut().unwrap();
+                                                    response_headers.insert(
+                                                        CONTENT_TYPE,
+                                                        HeaderValue::from_str("application/json").map_err(|e| { error!(error = ?e); StatusCode::INTERNAL_SERVER_ERROR })?);
+                                                  }
+
+                                                  let body_content =  tokio::task::spawn_blocking(move ||
+                                                      serde_json::to_vec(&body).map_err(|e| {
+                                                        error!(error = ?e);
+                                                        StatusCode::INTERNAL_SERVER_ERROR
+                                                      })).await.unwrap()?;
+                                                  response.body(Body::from(body_content))
+                                                },
+                                                DeleteDeleteResponse::Status400_BadRequest
+                                                    (body)
+                                                => {
+
+                                                  let mut response = response.status(400);
+                                                  {
+                                                    let mut response_headers = response.headers_mut().unwrap();
+                                                    response_headers.insert(
+                                                        CONTENT_TYPE,
+                                                        HeaderValue::from_str("application/json").map_err(|e| { error!(error = ?e); StatusCode::INTERNAL_SERVER_ERROR })?);
+                                                  }
+
+                                                  let body_content =  tokio::task::spawn_blocking(move ||
+                                                      serde_json::to_vec(&body).map_err(|e| {
+                                                        error!(error = ?e);
+                                                        StatusCode::INTERNAL_SERVER_ERROR
+                                                      })).await.unwrap()?;
+                                                  response.body(Body::from(body_content))
+                                                },
+                                                DeleteDeleteResponse::Status500_InternalServerError
+                                                    (body)
+                                                => {
+
+                                                  let mut response = response.status(500);
+                                                  {
+                                                    let mut response_headers = response.headers_mut().unwrap();
+                                                    response_headers.insert(
+                                                        CONTENT_TYPE,
+                                                        HeaderValue::from_str("application/json").map_err(|e| { error!(error = ?e); StatusCode::INTERNAL_SERVER_ERROR })?);
+                                                  }
+
+                                                  let body_content =  tokio::task::spawn_blocking(move ||
+                                                      serde_json::to_vec(&body).map_err(|e| {
+                                                        error!(error = ?e);
+                                                        StatusCode::INTERNAL_SERVER_ERROR
+                                                      })).await.unwrap()?;
+                                                  response.body(Body::from(body_content))
+                                                },
+                                            },
+                                            Err(_) => {
+                                                // Application code returned an error. This should not happen, as the implementation should
+                                                // return a valid response.
+                                                response.status(500).body(Body::empty())
+                                            },
+                                        };
+
+                                        resp.map_err(|e| { error!(error = ?e); StatusCode::INTERNAL_SERVER_ERROR })
 }
 
 

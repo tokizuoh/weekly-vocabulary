@@ -71,6 +71,26 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "500":
           $ref: "#/components/responses/InternalServerError"
+  /delete:
+    delete:
+      description: "Delete vocabulary"
+      requestBody:
+        description: "vocabulary"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteVocabularyRequestBody"
+      responses:
+        "200":
+          description: "ok response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteVocabularyOkResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 components:
   responses:
     NotFound:
@@ -202,6 +222,18 @@ components:
       required:
         - vocabulary
     UpdateVocabularyOkResponse:
+      properties:
+        message:
+          type: string
+      required:
+        - message
+    DeleteVocabularyRequestBody:
+      properties:
+        id:
+          type: integer
+      required:
+        - id
+    DeleteVocabularyOkResponse:
       properties:
         message:
           type: string

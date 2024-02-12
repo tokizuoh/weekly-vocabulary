@@ -17,6 +17,23 @@ pub const API_VERSION: &str = "1.0.0";
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
+pub enum DeleteDeleteResponse {
+    /// ok response
+    Status200_OkResponse
+    (models::DeleteVocabularyOkResponse)
+    ,
+    /// Bad Request
+    Status400_BadRequest
+    (models::Error)
+    ,
+    /// Internal Server Error
+    Status500_InternalServerError
+    (models::Error)
+}
+
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
 pub enum GetAllGetResponse {
     /// ok response
     Status200_OkResponse
@@ -83,6 +100,16 @@ pub enum UpdatePutResponse {
 #[async_trait]
 #[allow(clippy::ptr_arg)]
 pub trait Api {
+
+                /// DeleteDelete - DELETE /delete
+                async fn delete_delete(
+                &self,
+                method: Method,
+                host: Host,
+                cookies: CookieJar,
+                        body: Option<models::DeleteVocabularyRequestBody>,
+                ) -> Result<DeleteDeleteResponse, String>;
+
 
                 /// GetAllGet - GET /get/all
                 async fn get_all_get(

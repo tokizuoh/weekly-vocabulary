@@ -24,3 +24,9 @@ curl-update:
 	-H "Content-Type: application/json" \
 	-d '{ "vocabulary": { "id": 2, "spelling": "CHANGED-SPELLING", "meaning": "CHANGED-MEANING", "part_of_speech": "interjection" } }' \
 	localhost:8080/update
+curl-delete:
+	curl --dump-header - \
+	-X DELETE \
+	-H "Content-Type: application/json" \
+	-d '{ "id": $(ID) }' \
+	localhost:8080/delete
