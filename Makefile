@@ -28,5 +28,4 @@ curl-delete:
 	curl --dump-header - \
 	-X DELETE \
 	-H "Content-Type: application/json" \
-	-d '{ "id": $(ID) }' \
-	localhost:8080/delete
+	localhost:8080/delete/${ID}

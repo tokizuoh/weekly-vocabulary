@@ -13,7 +13,7 @@ use crate::{header, types::*};
 use crate::models;
 
 use crate::{Api,
-     DeleteDeleteResponse,
+     DeleteIdDeleteResponse,
      GetAllGetResponse,
      GetRecentGetResponse,
      RegisterPostResponse,
@@ -28,8 +28,8 @@ where
 {
     // build our application with a route
     Router::new()
-        .route("/delete",
-            delete(delete_delete::<I, A>)
+        .route("/delete/:id",
+            delete(delete_id_delete::<I, A>)
         )
         .route("/get/all",
             get(get_all_get::<I, A>)
@@ -46,39 +46,29 @@ where
         .with_state(api_impl)
 }
 
-    #[derive(validator::Validate)]
-    #[allow(dead_code)]
-    struct DeleteDeleteBodyValidator<'a> {
-            #[validate]
-          body: &'a models::DeleteVocabularyRequestBody,
-    }
-
 
 #[tracing::instrument(skip_all)]
-fn delete_delete_validation(
-        body: Option<models::DeleteVocabularyRequestBody>,
+fn delete_id_delete_validation(
+  path_params: models::DeleteIdDeletePathParams,
 ) -> std::result::Result<(
-        Option<models::DeleteVocabularyRequestBody>,
+  models::DeleteIdDeletePathParams,
 ), ValidationErrors>
 {
-            if let Some(body) = &body {
-              let b = DeleteDeleteBodyValidator { body };
-              b.validate()?;
-            }
+  path_params.validate()?;
 
 Ok((
-    body,
+  path_params,
 ))
 }
 
-/// DeleteDelete - DELETE /delete
+/// DeleteIdDelete - DELETE /delete/{id}
 #[tracing::instrument(skip_all)]
-async fn delete_delete<I, A>(
+async fn delete_id_delete<I, A>(
   method: Method,
   host: Host,
   cookies: CookieJar,
+  Path(path_params): Path<models::DeleteIdDeletePathParams>,
  State(api_impl): State<I>,
-          Json(body): Json<Option<models::DeleteVocabularyRequestBody>>,
 ) -> Result<Response, StatusCode>
 where 
     I: AsRef<A> + Send + Sync,
@@ -87,13 +77,13 @@ where
 
       #[allow(clippy::redundant_closure)]
       let validation = tokio::task::spawn_blocking(move || 
-    delete_delete_validation(
-          body,
+    delete_id_delete_validation(
+        path_params,
     )
   ).await.unwrap();
 
   let Ok((
-      body,
+    path_params,
   )) = validation else {
     return Response::builder()
             .status(StatusCode::BAD_REQUEST)
@@ -101,18 +91,18 @@ where
             .map_err(|_| StatusCode::BAD_REQUEST); 
   };
 
-  let result = api_impl.as_ref().delete_delete(
+  let result = api_impl.as_ref().delete_id_delete(
       method,
       host,
       cookies,
-              body,
+        path_params,
   ).await;
 
   let mut response = Response::builder();
 
   let resp = match result {
                                             Ok(rsp) => match rsp {
-                                                DeleteDeleteResponse::Status200_OkResponse
+                                                DeleteIdDeleteResponse::Status200_OkResponse
                                                     (body)
                                                 => {
 
@@ -131,7 +121,7 @@ where
                                                       })).await.unwrap()?;
                                                   response.body(Body::from(body_content))
                                                 },
-                                                DeleteDeleteResponse::Status400_BadRequest
+                                                DeleteIdDeleteResponse::Status400_BadRequest
                                                     (body)
                                                 => {
 
@@ -150,7 +140,7 @@ where
                                                       })).await.unwrap()?;
                                                   response.body(Body::from(body_content))
                                                 },
-                                                DeleteDeleteResponse::Status500_InternalServerError
+                                                DeleteIdDeleteResponse::Status500_InternalServerError
                                                     (body)
                                                 => {
 

@@ -3,7 +3,7 @@ use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use generated::{
     models::{self, AllVocabularyResponse, RecentlyVocabularyResponse, Vocabulary},
-    DeleteDeleteResponse, GetAllGetResponse, GetRecentGetResponse, RegisterPostResponse,
+    DeleteIdDeleteResponse, GetAllGetResponse, GetRecentGetResponse, RegisterPostResponse,
     UpdatePutResponse,
 };
 use mysql::{params, prelude::Queryable, Pool};
@@ -215,36 +215,27 @@ impl generated::Api for Api {
         }
     }
 
-    async fn delete_delete(
+    async fn delete_id_delete(
         &self,
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        body: Option<models::DeleteVocabularyRequestBody>,
-    ) -> Result<DeleteDeleteResponse, String> {
-        let body = match body {
-            Some(body) => body,
-            None => {
-                return Ok(DeleteDeleteResponse::Status400_BadRequest(
-                    generated::models::Error { message: None },
-                ));
-            }
-        };
-
+        path_params: models::DeleteIdDeletePathParams,
+    ) -> Result<DeleteIdDeleteResponse, String> {
         let mut conn = self.db.get_conn().unwrap();
 
         match conn.exec_drop(
             r"DELETE FROM vocabulary WHERE id=(:id);",
             params! {
-                "id" => body.id,
+                "id" => path_params.id
             },
         ) {
-            Ok(_) => Ok(DeleteDeleteResponse::Status200_OkResponse(
+            Ok(_) => Ok(DeleteIdDeleteResponse::Status200_OkResponse(
                 models::DeleteVocabularyOkResponse {
                     message: "Resource deleted successfully".to_string(),
                 },
             )),
-            Err(e) => Ok(DeleteDeleteResponse::Status500_InternalServerError(
+            Err(e) => Ok(DeleteIdDeleteResponse::Status500_InternalServerError(
                 models::Error {
                     message: Some(format!("Failed to delete vocabulary: {}", e)),
                 },

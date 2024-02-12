@@ -17,7 +17,7 @@ pub const API_VERSION: &str = "1.0.0";
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
-pub enum DeleteDeleteResponse {
+pub enum DeleteIdDeleteResponse {
     /// ok response
     Status200_OkResponse
     (models::DeleteVocabularyOkResponse)
@@ -101,14 +101,14 @@ pub enum UpdatePutResponse {
 #[allow(clippy::ptr_arg)]
 pub trait Api {
 
-                /// DeleteDelete - DELETE /delete
-                async fn delete_delete(
+                /// DeleteIdDelete - DELETE /delete/{id}
+                async fn delete_id_delete(
                 &self,
                 method: Method,
                 host: Host,
                 cookies: CookieJar,
-                        body: Option<models::DeleteVocabularyRequestBody>,
-                ) -> Result<DeleteDeleteResponse, String>;
+                  path_params: models::DeleteIdDeletePathParams,
+                ) -> Result<DeleteIdDeleteResponse, String>;
 
 
                 /// GetAllGet - GET /get/all
