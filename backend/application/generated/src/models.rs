@@ -8,6 +8,140 @@ use crate::header;
 use crate::{models, types::*};
 
       
+      
+
+
+
+
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct AllVocabularyResponse {
+    #[serde(rename = "vocabulary_list")]
+    pub vocabulary_list: Vec<models::Vocabulary>,
+
+    #[serde(rename = "total_count")]
+    pub total_count: i32,
+
+}
+
+
+impl AllVocabularyResponse {
+    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
+    pub fn new(vocabulary_list: Vec<models::Vocabulary>, total_count: i32, ) -> AllVocabularyResponse {
+        AllVocabularyResponse {
+            vocabulary_list,
+            total_count,
+        }
+    }
+}
+
+/// Converts the AllVocabularyResponse value to the Query Parameters representation (style=form, explode=false)
+/// specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde serializer
+impl std::string::ToString for AllVocabularyResponse {
+    fn to_string(&self) -> String {
+        let params: Vec<Option<String>> = vec![
+            // Skipping vocabulary_list in query parameter serialization
+
+
+            Some("total_count".to_string()),
+            Some(self.total_count.to_string()),
+
+        ];
+
+        params.into_iter().flatten().collect::<Vec<_>>().join(",")
+    }
+}
+
+/// Converts Query Parameters representation (style=form, explode=false) to a AllVocabularyResponse value
+/// as specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde deserializer
+impl std::str::FromStr for AllVocabularyResponse {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        /// An intermediate representation of the struct to use for parsing.
+        #[derive(Default)]
+        #[allow(dead_code)]
+        struct IntermediateRep {
+            pub vocabulary_list: Vec<Vec<models::Vocabulary>>,
+            pub total_count: Vec<i32>,
+        }
+
+        let mut intermediate_rep = IntermediateRep::default();
+
+        // Parse into intermediate representation
+        let mut string_iter = s.split(',');
+        let mut key_result = string_iter.next();
+
+        while key_result.is_some() {
+            let val = match string_iter.next() {
+                Some(x) => x,
+                None => return std::result::Result::Err("Missing value while parsing AllVocabularyResponse".to_string())
+            };
+
+            if let Some(key) = key_result {
+                #[allow(clippy::match_single_binding)]
+                match key {
+                    "vocabulary_list" => return std::result::Result::Err("Parsing a container in this style is not supported in AllVocabularyResponse".to_string()),
+                    #[allow(clippy::redundant_clone)]
+                    "total_count" => intermediate_rep.total_count.push(<i32 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    _ => return std::result::Result::Err("Unexpected key while parsing AllVocabularyResponse".to_string())
+                }
+            }
+
+            // Get the next key
+            key_result = string_iter.next();
+        }
+
+        // Use the intermediate representation to return the struct
+        std::result::Result::Ok(AllVocabularyResponse {
+            vocabulary_list: intermediate_rep.vocabulary_list.into_iter().next().ok_or_else(|| "vocabulary_list missing in AllVocabularyResponse".to_string())?,
+            total_count: intermediate_rep.total_count.into_iter().next().ok_or_else(|| "total_count missing in AllVocabularyResponse".to_string())?,
+        })
+    }
+}
+
+// Methods for converting between header::IntoHeaderValue<AllVocabularyResponse> and HeaderValue
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<header::IntoHeaderValue<AllVocabularyResponse>> for HeaderValue {
+    type Error = String;
+
+    fn try_from(hdr_value: header::IntoHeaderValue<AllVocabularyResponse>) -> std::result::Result<Self, Self::Error> {
+        let hdr_value = hdr_value.to_string();
+        match HeaderValue::from_str(&hdr_value) {
+             std::result::Result::Ok(value) => std::result::Result::Ok(value),
+             std::result::Result::Err(e) => std::result::Result::Err(
+                 format!("Invalid header value for AllVocabularyResponse - value: {} is invalid {}",
+                     hdr_value, e))
+        }
+    }
+}
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<AllVocabularyResponse> {
+    type Error = String;
+
+    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
+        match hdr_value.to_str() {
+             std::result::Result::Ok(value) => {
+                    match <AllVocabularyResponse as std::str::FromStr>::from_str(value) {
+                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
+                        std::result::Result::Err(err) => std::result::Result::Err(
+                            format!("Unable to convert header value '{}' into AllVocabularyResponse - {}",
+                                value, err))
+                    }
+             },
+             std::result::Result::Err(e) => std::result::Result::Err(
+                 format!("Unable to convert header: {:?} to string: {}",
+                     hdr_value, e))
+        }
+    }
+}
+
+
 
 
 

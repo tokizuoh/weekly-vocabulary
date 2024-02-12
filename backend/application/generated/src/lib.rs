@@ -17,6 +17,19 @@ pub const API_VERSION: &str = "1.0.0";
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
+pub enum GetAllGetResponse {
+    /// Return all regisitered vocabulary list
+    Status200_ReturnAllRegisiteredVocabularyList
+    (models::AllVocabularyResponse)
+    ,
+    /// Internal Server Error
+    Status500_InternalServerError
+    (models::Error)
+}
+
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
 pub enum GetRecentGetResponse {
     /// Get recently regisitered vocabulary
     Status200_GetRecentlyRegisiteredVocabulary
@@ -36,6 +49,15 @@ pub enum GetRecentGetResponse {
 #[async_trait]
 #[allow(clippy::ptr_arg)]
 pub trait Api {
+
+                /// GetAllGet - GET /get/all
+                async fn get_all_get(
+                &self,
+                method: Method,
+                host: Host,
+                cookies: CookieJar,
+                ) -> Result<GetAllGetResponse, String>;
+
 
                 /// GetRecentGet - GET /get/recent
                 async fn get_recent_get(

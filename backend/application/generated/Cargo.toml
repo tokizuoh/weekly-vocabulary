@@ -2,7 +2,7 @@
 name = "generated"
 version = "1.0.0"
 authors = ["OpenAPI Generator team and contributors"]
-description = "This API allows ... "
+description = "This is a server for english vocabulary. "
 edition = "2021"
 
 [features]

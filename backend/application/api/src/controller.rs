@@ -2,8 +2,8 @@ use async_trait::async_trait;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use generated::{
-    models::{self, RecentlyVocabularyResponse, Vocabulary},
-    GetRecentGetResponse,
+    models::{self, AllVocabularyResponse, RecentlyVocabularyResponse, Vocabulary},
+    GetAllGetResponse, GetRecentGetResponse,
 };
 use mysql::{prelude::Queryable, Pool};
 
@@ -63,6 +63,41 @@ impl generated::Api for Api {
                 }
             }
             Err(e) => Ok(GetRecentGetResponse::Status500_InternalServerError(
+                generated::models::Error {
+                    message: Some(e.to_string()),
+                },
+            )),
+        }
+    }
+
+    async fn get_all_get(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+    ) -> Result<GetAllGetResponse, String> {
+        let mut conn = self.db.get_conn().unwrap();
+
+        let result = conn.query_map(
+            "SELECT id, spelling, meaning, part_of_speech FROM vocabulary;",
+            |(id, spelling, meaning, part_of_speech)| Vocabulary {
+                id: id,
+                part_of_speech: part_of_speech,
+                spelling: spelling,
+                meaning: meaning,
+            },
+        );
+
+        match result {
+            Ok(list) => Ok(
+                GetAllGetResponse::Status200_ReturnAllRegisiteredVocabularyList(
+                    AllVocabularyResponse {
+                        vocabulary_list: list.clone(),
+                        total_count: list.len() as i32,
+                    },
+                ),
+            ),
+            Err(e) => Ok(GetAllGetResponse::Status500_InternalServerError(
                 generated::models::Error {
                     message: Some(e.to_string()),
                 },

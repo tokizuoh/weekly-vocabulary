@@ -24,37 +24,6 @@
 //     pub meaning: String,
 // }
 
-// // TODO: rewrite
-// pub async fn get_all_vocabulary(
-//     State(data): State<Arc<AppState>>,
-// ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
-//     let mut conn = data.db.get_conn().unwrap();
-
-//     let result = conn
-//         .query_map(
-//             "SELECT spelling, meaning, part_of_speech FROM vocabulary;",
-//             |(spelling, meaning, part_of_speech)| Vocabulary {
-//                 part_of_speech: PartOfSpeech::from_string(part_of_speech).unwrap(),
-//                 spelling: spelling,
-//                 meaning: meaning,
-//             },
-//         )
-//         .map_err(|e| {
-//             let error_response = serde_json::json!({
-//                 "message": format!("Database error: {}", e),
-//             });
-//             (StatusCode::INTERNAL_SERVER_ERROR, Json(error_response))
-//         })?;
-
-//     let json_response = serde_json::json!({
-//         "metadata": {
-//             "total_count": result.len(),
-//         },
-//         "data": result,
-//     });
-
-//     Ok(Json(json_response))
-// }
 
 // // TODO: rewrite
 // pub async fn register_vocabulary(
