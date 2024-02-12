@@ -3,8 +3,8 @@ use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use generated::{
     models::{self, AllVocabularyResponse, RecentlyVocabularyResponse, Vocabulary},
-    DeleteIdDeleteResponse, GetAllGetResponse, GetRecentGetResponse, RegisterPostResponse,
-    UpdatePutResponse,
+    DeleteIdDeleteResponse, GetAllGetResponse, RegisterPostResponse, UpdatePutResponse,
+    VocabularyRecentGetResponse,
 };
 use mysql::{params, prelude::Queryable, Pool};
 
@@ -24,12 +24,12 @@ impl AsRef<Api> for Api {
 
 #[async_trait]
 impl generated::Api for Api {
-    async fn get_recent_get(
+    async fn vocabulary_recent_get(
         &self,
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-    ) -> Result<GetRecentGetResponse, String> {
+    ) -> Result<VocabularyRecentGetResponse, String> {
         let mut conn = self.db.get_conn().unwrap();
 
         let result = conn.query_map(
@@ -45,7 +45,7 @@ impl generated::Api for Api {
         match result {
             Ok(value) => {
                 if let Some(vocabulary) = value.get(0) {
-                    Ok(GetRecentGetResponse::Status200_OkResponse(
+                    Ok(VocabularyRecentGetResponse::Status200_OkResponse(
                         RecentlyVocabularyResponse {
                             vocabulary: Vocabulary {
                                 id: vocabulary.id,
@@ -57,13 +57,13 @@ impl generated::Api for Api {
                     ))
                 } else {
                     Ok(
-                        GetRecentGetResponse::Status404_TheSpecifiedResourceWasNotFound(
+                        VocabularyRecentGetResponse::Status404_TheSpecifiedResourceWasNotFound(
                             models::Error { message: None },
                         ),
                     )
                 }
             }
-            Err(e) => Ok(GetRecentGetResponse::Status500_InternalServerError(
+            Err(e) => Ok(VocabularyRecentGetResponse::Status500_InternalServerError(
                 generated::models::Error {
                     message: Some(e.to_string()),
                 },

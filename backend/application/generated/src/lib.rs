@@ -47,23 +47,6 @@ pub enum GetAllGetResponse {
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
-pub enum GetRecentGetResponse {
-    /// ok response
-    Status200_OkResponse
-    (models::RecentlyVocabularyResponse)
-    ,
-    /// The specified resource was not found
-    Status404_TheSpecifiedResourceWasNotFound
-    (models::Error)
-    ,
-    /// Internal Server Error
-    Status500_InternalServerError
-    (models::Error)
-}
-
-        #[derive(Debug, PartialEq, Serialize, Deserialize)]
-#[must_use]
-#[allow(clippy::large_enum_variant)]
 pub enum RegisterPostResponse {
     /// ok response
     Status201_OkResponse
@@ -88,6 +71,23 @@ pub enum UpdatePutResponse {
     ,
     /// Bad Request
     Status400_BadRequest
+    (models::Error)
+    ,
+    /// Internal Server Error
+    Status500_InternalServerError
+    (models::Error)
+}
+
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum VocabularyRecentGetResponse {
+    /// ok response
+    Status200_OkResponse
+    (models::RecentlyVocabularyResponse)
+    ,
+    /// The specified resource was not found
+    Status404_TheSpecifiedResourceWasNotFound
     (models::Error)
     ,
     /// Internal Server Error
@@ -120,15 +120,6 @@ pub trait Api {
                 ) -> Result<GetAllGetResponse, String>;
 
 
-                /// GetRecentGet - GET /get/recent
-                async fn get_recent_get(
-                &self,
-                method: Method,
-                host: Host,
-                cookies: CookieJar,
-                ) -> Result<GetRecentGetResponse, String>;
-
-
                 /// RegisterPost - POST /register
                 async fn register_post(
                 &self,
@@ -147,6 +138,15 @@ pub trait Api {
                 cookies: CookieJar,
                         body: Option<models::UpdateVocabularyRequestBody>,
                 ) -> Result<UpdatePutResponse, String>;
+
+
+                /// VocabularyRecentGet - GET /vocabulary/recent
+                async fn vocabulary_recent_get(
+                &self,
+                method: Method,
+                host: Host,
+                cookies: CookieJar,
+                ) -> Result<VocabularyRecentGetResponse, String>;
 
 }
 

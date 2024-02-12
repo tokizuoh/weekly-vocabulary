@@ -8,7 +8,7 @@ generate:
 		-p packageName=generated
 curl-get-recent:
 	curl --dump-header - \
-	localhost:8080/get/recent
+	localhost:8080/vocabulary/recent
 curl-get-all:
 	curl --dump-header - \
 	localhost:8080/get/all

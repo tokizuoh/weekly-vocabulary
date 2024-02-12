@@ -5,7 +5,7 @@ info:
     This is a server for english vocabulary.
   version: "1.0.0"
 paths:
-  /get/recent:
+  /vocabulary/recent:
     get:
       description: "Return recently registered vocabulary"
       responses:
