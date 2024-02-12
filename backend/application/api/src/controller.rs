@@ -146,7 +146,7 @@ impl generated::Api for Api {
                 "part_of_speech" => vocabulary.part_of_speech,
             },
         ) {
-            Ok(_) => Ok(RegisterPostResponse::Status200_OkResponse(
+            Ok(_) => Ok(RegisterPostResponse::Status201_OkResponse(
                 models::RegisterVocabularyOkResponse {
                     message: "Resource registered successfully".to_string(),
                 },

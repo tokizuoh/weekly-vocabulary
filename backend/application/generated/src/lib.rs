@@ -66,7 +66,7 @@ pub enum GetRecentGetResponse {
 #[allow(clippy::large_enum_variant)]
 pub enum RegisterPostResponse {
     /// ok response
-    Status200_OkResponse
+    Status201_OkResponse
     (models::RegisterVocabularyOkResponse)
     ,
     /// Bad Request

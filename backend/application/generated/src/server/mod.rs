@@ -449,11 +449,11 @@ where
 
   let resp = match result {
                                             Ok(rsp) => match rsp {
-                                                RegisterPostResponse::Status200_OkResponse
+                                                RegisterPostResponse::Status201_OkResponse
                                                     (body)
                                                 => {
 
-                                                  let mut response = response.status(200);
+                                                  let mut response = response.status(201);
                                                   {
                                                     let mut response_headers = response.headers_mut().unwrap();
                                                     response_headers.insert(
