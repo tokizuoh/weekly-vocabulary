@@ -2,14 +2,14 @@ openapi: 3.0.3
 info:
   title: "weekend-vocabulary"
   description: |
-    This API allows ...
+    This is a server for english vocabulary.
   version: "1.0.0"
 paths:
   /get/recent:
     get:
       responses:
         "200":
-          description: "Get recently regisitered vocabulary"
+          description: "Return recently regisitered vocabulary"
           content:
             application/json:
               schema:
