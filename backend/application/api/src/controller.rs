@@ -45,7 +45,7 @@ impl generated::Api for Api {
             Ok(value) => {
                 if let Some(vocabulary) = value.get(0) {
                     Ok(
-                        GetRecentGetResponse::Status200_GetRecentlyRegisiteredVocabulary(
+                        GetRecentGetResponse::Status200_ReturnRecentlyRegisiteredVocabulary(
                             RecentlyVocabularyResponse {
                                 vocabulary: Vocabulary {
                                     id: vocabulary.id,
