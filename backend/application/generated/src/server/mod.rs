@@ -86,7 +86,7 @@ where
 
   let resp = match result {
                                             Ok(rsp) => match rsp {
-                                                GetAllGetResponse::Status200_ReturnAllRegisiteredVocabularyList
+                                                GetAllGetResponse::Status200_OkResponse
                                                     (body)
                                                 => {
 
@@ -183,7 +183,7 @@ where
 
   let resp = match result {
                                             Ok(rsp) => match rsp {
-                                                GetRecentGetResponse::Status200_ReturnRecentlyRegisiteredVocabulary
+                                                GetRecentGetResponse::Status200_OkResponse
                                                     (body)
                                                 => {
 
@@ -317,7 +317,7 @@ where
 
   let resp = match result {
                                             Ok(rsp) => match rsp {
-                                                RegisterPutResponse::Status200_RegisiterVocabulary
+                                                RegisterPutResponse::Status200_OkResponse
                                                     (body)
                                                 => {
 

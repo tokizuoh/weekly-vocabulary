@@ -7,9 +7,10 @@ info:
 paths:
   /get/recent:
     get:
+      description: "Return recently regisitered vocabulary"
       responses:
         "200":
-          description: "Return recently regisitered vocabulary"
+          description: "ok response"
           content:
             application/json:
               schema:
@@ -20,9 +21,10 @@ paths:
           $ref: "#/components/responses/InternalServerError"
   /get/all:
     get:
+      description: "Return all regisitered vocabulary list"
       responses:
         "200":
-          description: "Return all regisitered vocabulary list"
+          description: "ok response"
           content:
             application/json:
               schema:
@@ -31,6 +33,7 @@ paths:
           $ref: "#/components/responses/InternalServerError"
   /register:
     put:
+      description: "Regisiter vocabulary"
       requestBody:
         description: "vocabulary"
         content:
@@ -39,7 +42,7 @@ paths:
               $ref: "#/components/schemas/RegisterVocabularyRequestBody"
       responses:
         "200":
-          description: "Regisiter vocabulary"
+          description: "ok response"
           content:
             application/json:
               schema:

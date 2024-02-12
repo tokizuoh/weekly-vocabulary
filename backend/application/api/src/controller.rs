@@ -44,18 +44,16 @@ impl generated::Api for Api {
         match result {
             Ok(value) => {
                 if let Some(vocabulary) = value.get(0) {
-                    Ok(
-                        GetRecentGetResponse::Status200_ReturnRecentlyRegisiteredVocabulary(
-                            RecentlyVocabularyResponse {
-                                vocabulary: Vocabulary {
-                                    id: vocabulary.id,
-                                    part_of_speech: vocabulary.part_of_speech.clone(),
-                                    spelling: vocabulary.spelling.clone(),
-                                    meaning: vocabulary.meaning.clone(),
-                                },
+                    Ok(GetRecentGetResponse::Status200_OkResponse(
+                        RecentlyVocabularyResponse {
+                            vocabulary: Vocabulary {
+                                id: vocabulary.id,
+                                part_of_speech: vocabulary.part_of_speech.clone(),
+                                spelling: vocabulary.spelling.clone(),
+                                meaning: vocabulary.meaning.clone(),
                             },
-                        ),
-                    )
+                        },
+                    ))
                 } else {
                     Ok(
                         GetRecentGetResponse::Status404_TheSpecifiedResourceWasNotFound(
@@ -91,14 +89,12 @@ impl generated::Api for Api {
         );
 
         match result {
-            Ok(list) => Ok(
-                GetAllGetResponse::Status200_ReturnAllRegisiteredVocabularyList(
-                    AllVocabularyResponse {
-                        vocabulary_list: list.clone(),
-                        total_count: list.len() as i32,
-                    },
-                ),
-            ),
+            Ok(list) => Ok(GetAllGetResponse::Status200_OkResponse(
+                AllVocabularyResponse {
+                    vocabulary_list: list.clone(),
+                    total_count: list.len() as i32,
+                },
+            )),
             Err(e) => Ok(GetAllGetResponse::Status500_InternalServerError(
                 generated::models::Error {
                     message: Some(e.to_string()),
@@ -149,7 +145,7 @@ impl generated::Api for Api {
                 "part_of_speech" => vocabulary.part_of_speech,
             },
         ) {
-            Ok(_) => Ok(RegisterPutResponse::Status200_RegisiterVocabulary(
+            Ok(_) => Ok(RegisterPutResponse::Status200_OkResponse(
                 models::RegisterVocabularyOkResponse {
                     message: "Resource updated successfully".to_string(),
                 },

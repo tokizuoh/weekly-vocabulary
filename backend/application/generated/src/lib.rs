@@ -18,8 +18,8 @@ pub const API_VERSION: &str = "1.0.0";
 #[must_use]
 #[allow(clippy::large_enum_variant)]
 pub enum GetAllGetResponse {
-    /// Return all regisitered vocabulary list
-    Status200_ReturnAllRegisiteredVocabularyList
+    /// ok response
+    Status200_OkResponse
     (models::AllVocabularyResponse)
     ,
     /// Internal Server Error
@@ -31,8 +31,8 @@ pub enum GetAllGetResponse {
 #[must_use]
 #[allow(clippy::large_enum_variant)]
 pub enum GetRecentGetResponse {
-    /// Return recently regisitered vocabulary
-    Status200_ReturnRecentlyRegisiteredVocabulary
+    /// ok response
+    Status200_OkResponse
     (models::RecentlyVocabularyResponse)
     ,
     /// The specified resource was not found
@@ -48,8 +48,8 @@ pub enum GetRecentGetResponse {
 #[must_use]
 #[allow(clippy::large_enum_variant)]
 pub enum RegisterPutResponse {
-    /// Regisiter vocabulary
-    Status200_RegisiterVocabulary
+    /// ok response
+    Status200_OkResponse
     (models::RegisterVocabularyOkResponse)
     ,
     /// Bad Request
