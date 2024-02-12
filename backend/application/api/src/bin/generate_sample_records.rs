@@ -1,5 +1,5 @@
-use api::vocabulary::{PartOfSpeech, Vocabulary};
 use dotenv;
+use generated::models::Vocabulary;
 use mysql::prelude::*;
 use mysql::*;
 use std::error::Error;
@@ -17,28 +17,33 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let vocabulary_list = vec![
         Vocabulary {
-            part_of_speech: PartOfSpeech::Noun,
+            id: None,
+            part_of_speech: "noun".to_string(),
             spelling: "apple".to_string(),
             meaning: "a round fruit with firm, white flesh and a green or red skin".to_string(),
         },
         Vocabulary {
-            part_of_speech: PartOfSpeech::Noun,
+            id: None,
+            part_of_speech: "noun".to_string(),
             spelling: "banana".to_string(),
             meaning: "a long fruit with yello skin and soft".to_string(),
         },
         Vocabulary {
-            part_of_speech: PartOfSpeech::Noun,
+            id: None,
+            part_of_speech: "noun".to_string(),
             spelling: "citrus".to_string(),
             meaning: "any of a group plants that produce acidic fruits".to_string(),
         },
         Vocabulary {
-            part_of_speech: PartOfSpeech::Noun,
+            id: None,
+            part_of_speech: "noun".to_string(),
             spelling: "dragon fruit".to_string(),
             meaning: "a fruit with red or yellow skin and white or red flesh with many black seeds"
                 .to_string(),
         },
         Vocabulary {
-            part_of_speech: PartOfSpeech::Noun,
+            id: None,
+            part_of_speech: "noun".to_string(),
             spelling: "eggplant".to_string(),
             meaning: "a vegetable with oval, purple skin and white flesh".to_string(),
         },
@@ -51,7 +56,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             params! {
                 "spelling" => v.spelling.clone(),
                 "meaning" => v.meaning.clone(),
-                "part_of_speech" => v.part_of_speech.text()
+                "part_of_speech" => v.part_of_speech.clone()
             }
         }),
     )?;

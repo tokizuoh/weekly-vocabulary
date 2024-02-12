@@ -55,7 +55,6 @@ components:
         meaning:
           type: string
       required:
-        - id
         - part_of_speech
         - spelling
         - meaning

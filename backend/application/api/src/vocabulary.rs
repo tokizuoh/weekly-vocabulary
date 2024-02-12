@@ -1,51 +1,15 @@
-use serde::Serialize;
+use generated::models::Vocabulary;
 
-#[derive(Debug, Serialize)]
-pub enum PartOfSpeech {
-    Noun,
-    Pronoun,
-    Adjective,
-    Verb,
-    Adverb,
-    Preposition,
-    Conjunction,
-    Interjection,
+trait Validatable {
+    fn validate(&self) -> bool;
 }
 
-impl PartOfSpeech {
-    pub fn text(&self) -> &str {
-        match self {
-            PartOfSpeech::Noun => "noun",
-            PartOfSpeech::Pronoun => "pronoun",
-            PartOfSpeech::Adjective => "adjectiv",
-            PartOfSpeech::Verb => "verb",
-            PartOfSpeech::Adverb => "adverb",
-            PartOfSpeech::Preposition => "preposition",
-            PartOfSpeech::Conjunction => "conjunction",
-            PartOfSpeech::Interjection => "interjection",
+impl Validatable for Vocabulary {
+    fn validate(&self) -> bool {
+        match self.part_of_speech.to_lowercase().as_str() {
+            "noun" | "pronoun" | "adjective" | "verb" | "adverb" | "preposition"
+            | "conjunction" | "interjection" => true,
+            _ => false,
         }
     }
-}
-
-impl PartOfSpeech {
-    pub fn from_string(s: String) -> std::prelude::v1::Result<Self, ()> {
-        match s.to_lowercase().as_str() {
-            "noun" => Ok(PartOfSpeech::Noun),
-            "pronoun" => Ok(PartOfSpeech::Pronoun),
-            "adjective" => Ok(PartOfSpeech::Adjective),
-            "verb" => Ok(PartOfSpeech::Verb),
-            "adverb" => Ok(PartOfSpeech::Adverb),
-            "preposition" => Ok(PartOfSpeech::Preposition),
-            "conjunction" => Ok(PartOfSpeech::Conjunction),
-            "interjection" => Ok(PartOfSpeech::Interjection),
-            _ => Err(()),
-        }
-    }
-}
-
-#[derive(Debug, Serialize)]
-pub struct Vocabulary {
-    pub part_of_speech: PartOfSpeech,
-    pub spelling: String,
-    pub meaning: String,
 }

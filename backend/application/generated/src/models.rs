@@ -268,7 +268,8 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<RecentlyVoca
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct Vocabulary {
     #[serde(rename = "id")]
-    pub id: i32,
+    #[serde(skip_serializing_if="Option::is_none")]
+    pub id: Option<i32>,
 
 /// Note: inline enums are not fully supported by openapi-generator
     #[serde(rename = "part_of_speech")]
@@ -285,9 +286,9 @@ pub struct Vocabulary {
 
 impl Vocabulary {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new(id: i32, part_of_speech: String, spelling: String, meaning: String, ) -> Vocabulary {
+    pub fn new(part_of_speech: String, spelling: String, meaning: String, ) -> Vocabulary {
         Vocabulary {
-            id,
+            id: None,
             part_of_speech,
             spelling,
             meaning,
@@ -302,8 +303,12 @@ impl std::string::ToString for Vocabulary {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
 
-            Some("id".to_string()),
-            Some(self.id.to_string()),
+            self.id.as_ref().map(|id| {
+                [
+                    "id".to_string(),
+                    id.to_string(),
+                ].join(",")
+            }),
 
 
             Some("part_of_speech".to_string()),
@@ -373,7 +378,7 @@ impl std::str::FromStr for Vocabulary {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(Vocabulary {
-            id: intermediate_rep.id.into_iter().next().ok_or_else(|| "id missing in Vocabulary".to_string())?,
+            id: intermediate_rep.id.into_iter().next(),
             part_of_speech: intermediate_rep.part_of_speech.into_iter().next().ok_or_else(|| "part_of_speech missing in Vocabulary".to_string())?,
             spelling: intermediate_rep.spelling.into_iter().next().ok_or_else(|| "spelling missing in Vocabulary".to_string())?,
             meaning: intermediate_rep.meaning.into_iter().next().ok_or_else(|| "meaning missing in Vocabulary".to_string())?,

@@ -1,9 +1,8 @@
-use crate::vocabulary::{PartOfSpeech, Vocabulary};
 use async_trait::async_trait;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use generated::{
-    models::{self, RecentlyVocabularyResponse, Vocabulary as GeneratedVocabulary},
+    models::{self, RecentlyVocabularyResponse, Vocabulary},
     GetRecentGetResponse,
 };
 use mysql::{prelude::Queryable, Pool};
@@ -31,9 +30,10 @@ impl generated::Api for Api {
         let mut conn = self.db.get_conn().unwrap();
 
         let result = conn.query_map(
-            "SELECT spelling, meaning, part_of_speech FROM vocabulary ORDER BY id DESC LIMIT 1;",
-            |(spelling, meaning, part_of_speech)| Vocabulary {
-                part_of_speech: PartOfSpeech::from_string(part_of_speech).unwrap(),
+            "SELECT id, spelling, meaning, part_of_speech FROM vocabulary ORDER BY id DESC LIMIT 1;",
+            |(id, spelling, meaning, part_of_speech)| Vocabulary {
+                id: id,
+                part_of_speech: part_of_speech,
                 spelling: spelling,
                 meaning: meaning,
             },
@@ -45,9 +45,9 @@ impl generated::Api for Api {
                     Ok(
                         GetRecentGetResponse::Status200_GetRecentlyRegisiteredVocabulary(
                             RecentlyVocabularyResponse {
-                                vocabulary: GeneratedVocabulary {
-                                    id: 1,
-                                    part_of_speech: vocabulary.part_of_speech.text().to_string(),
+                                vocabulary: Vocabulary {
+                                    id: vocabulary.id,
+                                    part_of_speech: vocabulary.part_of_speech.clone(),
                                     spelling: vocabulary.spelling.clone(),
                                     meaning: vocabulary.meaning.clone(),
                                 },
