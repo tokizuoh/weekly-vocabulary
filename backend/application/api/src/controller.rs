@@ -3,7 +3,7 @@ use async_trait::async_trait;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use generated::{
-    models::RecentlyVocabularyResponse, models::Vocabulary as GeneratedVocabulary,
+    models::{self, RecentlyVocabularyResponse, Vocabulary as GeneratedVocabulary},
     GetRecentGetResponse,
 };
 use mysql::{prelude::Queryable, Pool};
@@ -30,24 +30,14 @@ impl generated::Api for Api {
     ) -> Result<GetRecentGetResponse, String> {
         let mut conn = self.db.get_conn().unwrap();
 
-        let result = conn
-        .query_map(
+        let result = conn.query_map(
             "SELECT spelling, meaning, part_of_speech FROM vocabulary ORDER BY id DESC LIMIT 1;",
             |(spelling, meaning, part_of_speech)| Vocabulary {
                 part_of_speech: PartOfSpeech::from_string(part_of_speech).unwrap(),
                 spelling: spelling,
                 meaning: meaning,
             },
-        )
-        .map_err(|_e| {
-            // TODO
-            // let error_response = serde_json::json!({
-                // "message": format!("Database error: {}", e),
-            // });
-
-            // Ok(GetRecentGetResponse::Status500_InternalServerError);
-            ""
-        });
+        );
 
         match result {
             Ok(value) => {
@@ -65,10 +55,18 @@ impl generated::Api for Api {
                         ),
                     )
                 } else {
-                    Ok(GetRecentGetResponse::Status404_NotFound)
+                    Ok(
+                        GetRecentGetResponse::Status404_TheSpecifiedResourceWasNotFound(
+                            models::Error { message: None },
+                        ),
+                    )
                 }
             }
-            Err(_) => Ok(GetRecentGetResponse::Status500_InternalServerError),
+            Err(e) => Ok(GetRecentGetResponse::Status500_InternalServerError(
+                generated::models::Error {
+                    message: Some(e.to_string()),
+                },
+            )),
         }
     }
 }

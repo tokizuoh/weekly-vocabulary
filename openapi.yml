@@ -15,10 +15,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/RecentlyVocabularyResponse"
         "404":
-          description: "Not Found"
+          $ref: "#/components/responses/NotFound"
         "500":
-          description: "Internal Server Error"
+          $ref: "#/components/responses/InternalServerError"
 components:
+  responses:
+    NotFound:
+      description: "The specified resource was not found"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InternalServerError:
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
   schemas:
     Vocabulary:
       properties:
@@ -41,3 +54,8 @@ components:
           $ref: "#/components/schemas/Vocabulary"
       required:
         - vocabulary
+    Error:
+      type: object
+      properties:
+        message:
+          type: string

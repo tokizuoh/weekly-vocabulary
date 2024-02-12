@@ -22,11 +22,13 @@ pub enum GetRecentGetResponse {
     Status200_GetRecentlyRegisiteredVocabulary
     (models::RecentlyVocabularyResponse)
     ,
-    /// Not Found
-    Status404_NotFound
+    /// The specified resource was not found
+    Status404_TheSpecifiedResourceWasNotFound
+    (models::Error)
     ,
     /// Internal Server Error
     Status500_InternalServerError
+    (models::Error)
 }
 
 
