@@ -124,11 +124,12 @@ impl generated::Api for Api {
 
         let mut conn = self.db.get_conn().unwrap();
 
-        let vocabulary = Vocabulary::new(
-            body.vocabulary.part_of_speech,
-            body.vocabulary.spelling,
-            body.vocabulary.meaning,
-        );
+        let vocabulary = Vocabulary {
+            id: None,
+            part_of_speech: body.vocabulary.part_of_speech,
+            spelling: body.vocabulary.spelling,
+            meaning: body.vocabulary.meaning,
+        };
 
         match vocabulary.validate() {
             true => {}
