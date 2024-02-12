@@ -112,23 +112,23 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    PartOfSpeech:
+      type: string
+      enum:
+        - noun
+        - pronoun
+        - adjective
+        - verb
+        - adverb
+        - preposition
+        - conjunction
+        - interjection
     Vocabulary:
       properties:
         id:
           type: integer
         part_of_speech:
-          type: string
-          enum:
-            [
-              noun,
-              pronoun,
-              adjective,
-              verb,
-              adverb,
-              preposition,
-              conjunction,
-              interjection,
-            ]
+          $ref: "#/components/schemas/PartOfSpeech"
         spelling:
           type: string
         meaning:
@@ -157,18 +157,7 @@ components:
     RegisterVocabularyInput:
       properties:
         part_of_speech:
-          type: string
-          enum:
-            [
-              noun,
-              pronoun,
-              adjective,
-              verb,
-              adverb,
-              preposition,
-              conjunction,
-              interjection,
-            ]
+          $ref: "#/components/schemas/PartOfSpeech"
         spelling:
           type: string
         meaning:
@@ -194,18 +183,7 @@ components:
         id:
           type: integer
         part_of_speech:
-          type: string
-          enum:
-            [
-              noun,
-              pronoun,
-              adjective,
-              verb,
-              adverb,
-              preposition,
-              conjunction,
-              interjection,
-            ]
+          $ref: "#/components/schemas/PartOfSpeech"
         spelling:
           type: string
         meaning:

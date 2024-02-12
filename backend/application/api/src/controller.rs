@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use async_trait::async_trait;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
@@ -34,9 +36,9 @@ impl generated::Api for Api {
 
         let result = conn.query_map(
             "SELECT id, spelling, meaning, part_of_speech FROM vocabulary ORDER BY id DESC LIMIT 1;",
-            |(id, spelling, meaning, part_of_speech)| Vocabulary {
-                id: id,
-                part_of_speech: part_of_speech,
+            |(id, spelling, meaning, part_of_speech): (i32, String, String, String)| Vocabulary {
+                id: Some(id),
+                part_of_speech: generated::models::PartOfSpeech::from_str(&part_of_speech).unwrap(),
                 spelling: spelling,
                 meaning: meaning,
             },
@@ -81,9 +83,9 @@ impl generated::Api for Api {
 
         let result = conn.query_map(
             "SELECT id, spelling, meaning, part_of_speech FROM vocabulary;",
-            |(id, spelling, meaning, part_of_speech)| Vocabulary {
-                id: id,
-                part_of_speech: part_of_speech,
+            |(id, spelling, meaning, part_of_speech): (i32, String, String, String)| Vocabulary {
+                id: Some(id),
+                part_of_speech: generated::models::PartOfSpeech::from_str(&part_of_speech).unwrap(),
                 spelling: spelling,
                 meaning: meaning,
             },
@@ -143,7 +145,7 @@ impl generated::Api for Api {
             params! {
                 "spelling" => vocabulary.spelling,
                 "meaning" => vocabulary.meaning,
-                "part_of_speech" => vocabulary.part_of_speech,
+                "part_of_speech" => vocabulary.part_of_speech.to_string(),
             },
         ) {
             Ok(_) => Ok(VocabularyPostResponse::Status201_OkResponse(
@@ -198,7 +200,7 @@ impl generated::Api for Api {
             params! {
                 "spelling" => vocabulary.spelling,
                 "meaning" => vocabulary.meaning,
-                "part_of_speech" => vocabulary.part_of_speech,
+                "part_of_speech" => vocabulary.part_of_speech.to_string(),
                 "id" => vocabulary.id,
             },
         ) {

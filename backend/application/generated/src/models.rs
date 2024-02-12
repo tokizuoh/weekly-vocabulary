@@ -408,6 +408,66 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<Error> {
 
 
 
+/// Enumeration of values.
+/// Since this enum's variants do not hold data, we can easily define them as `#[repr(C)]`
+/// which helps with FFI.
+#[allow(non_camel_case_types)]
+#[repr(C)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = "conversion", derive(frunk_enum_derive::LabelledGenericEnum))]
+pub enum PartOfSpeech {
+    #[serde(rename = "noun")]
+    Noun,
+    #[serde(rename = "pronoun")]
+    Pronoun,
+    #[serde(rename = "adjective")]
+    Adjective,
+    #[serde(rename = "verb")]
+    Verb,
+    #[serde(rename = "adverb")]
+    Adverb,
+    #[serde(rename = "preposition")]
+    Preposition,
+    #[serde(rename = "conjunction")]
+    Conjunction,
+    #[serde(rename = "interjection")]
+    Interjection,
+}
+
+impl std::fmt::Display for PartOfSpeech {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match *self {
+            PartOfSpeech::Noun => write!(f, "noun"),
+            PartOfSpeech::Pronoun => write!(f, "pronoun"),
+            PartOfSpeech::Adjective => write!(f, "adjective"),
+            PartOfSpeech::Verb => write!(f, "verb"),
+            PartOfSpeech::Adverb => write!(f, "adverb"),
+            PartOfSpeech::Preposition => write!(f, "preposition"),
+            PartOfSpeech::Conjunction => write!(f, "conjunction"),
+            PartOfSpeech::Interjection => write!(f, "interjection"),
+        }
+    }
+}
+
+impl std::str::FromStr for PartOfSpeech {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        match s {
+            "noun" => std::result::Result::Ok(PartOfSpeech::Noun),
+            "pronoun" => std::result::Result::Ok(PartOfSpeech::Pronoun),
+            "adjective" => std::result::Result::Ok(PartOfSpeech::Adjective),
+            "verb" => std::result::Result::Ok(PartOfSpeech::Verb),
+            "adverb" => std::result::Result::Ok(PartOfSpeech::Adverb),
+            "preposition" => std::result::Result::Ok(PartOfSpeech::Preposition),
+            "conjunction" => std::result::Result::Ok(PartOfSpeech::Conjunction),
+            "interjection" => std::result::Result::Ok(PartOfSpeech::Interjection),
+            _ => std::result::Result::Err(format!("Value not valid: {}", s)),
+        }
+    }
+}
+
+
 
 
 
@@ -536,9 +596,8 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<RecentlyVoca
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct RegisterVocabularyInput {
-/// Note: inline enums are not fully supported by openapi-generator
     #[serde(rename = "part_of_speech")]
-    pub part_of_speech: String,
+    pub part_of_speech: models::PartOfSpeech,
 
     #[serde(rename = "spelling")]
     pub spelling: String,
@@ -551,7 +610,7 @@ pub struct RegisterVocabularyInput {
 
 impl RegisterVocabularyInput {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new(part_of_speech: String, spelling: String, meaning: String, ) -> RegisterVocabularyInput {
+    pub fn new(part_of_speech: models::PartOfSpeech, spelling: String, meaning: String, ) -> RegisterVocabularyInput {
         RegisterVocabularyInput {
             part_of_speech,
             spelling,
@@ -566,9 +625,7 @@ impl RegisterVocabularyInput {
 impl std::string::ToString for RegisterVocabularyInput {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-
-            Some("part_of_speech".to_string()),
-            Some(self.part_of_speech.to_string()),
+            // Skipping part_of_speech in query parameter serialization
 
 
             Some("spelling".to_string()),
@@ -595,7 +652,7 @@ impl std::str::FromStr for RegisterVocabularyInput {
         #[derive(Default)]
         #[allow(dead_code)]
         struct IntermediateRep {
-            pub part_of_speech: Vec<String>,
+            pub part_of_speech: Vec<models::PartOfSpeech>,
             pub spelling: Vec<String>,
             pub meaning: Vec<String>,
         }
@@ -616,7 +673,7 @@ impl std::str::FromStr for RegisterVocabularyInput {
                 #[allow(clippy::match_single_binding)]
                 match key {
                     #[allow(clippy::redundant_clone)]
-                    "part_of_speech" => intermediate_rep.part_of_speech.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "part_of_speech" => intermediate_rep.part_of_speech.push(<models::PartOfSpeech as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "spelling" => intermediate_rep.spelling.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
@@ -934,9 +991,8 @@ pub struct UpdateVocabularyInput {
     #[serde(rename = "id")]
     pub id: i32,
 
-/// Note: inline enums are not fully supported by openapi-generator
     #[serde(rename = "part_of_speech")]
-    pub part_of_speech: String,
+    pub part_of_speech: models::PartOfSpeech,
 
     #[serde(rename = "spelling")]
     pub spelling: String,
@@ -949,7 +1005,7 @@ pub struct UpdateVocabularyInput {
 
 impl UpdateVocabularyInput {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new(id: i32, part_of_speech: String, spelling: String, meaning: String, ) -> UpdateVocabularyInput {
+    pub fn new(id: i32, part_of_speech: models::PartOfSpeech, spelling: String, meaning: String, ) -> UpdateVocabularyInput {
         UpdateVocabularyInput {
             id,
             part_of_speech,
@@ -969,9 +1025,7 @@ impl std::string::ToString for UpdateVocabularyInput {
             Some("id".to_string()),
             Some(self.id.to_string()),
 
-
-            Some("part_of_speech".to_string()),
-            Some(self.part_of_speech.to_string()),
+            // Skipping part_of_speech in query parameter serialization
 
 
             Some("spelling".to_string()),
@@ -999,7 +1053,7 @@ impl std::str::FromStr for UpdateVocabularyInput {
         #[allow(dead_code)]
         struct IntermediateRep {
             pub id: Vec<i32>,
-            pub part_of_speech: Vec<String>,
+            pub part_of_speech: Vec<models::PartOfSpeech>,
             pub spelling: Vec<String>,
             pub meaning: Vec<String>,
         }
@@ -1022,7 +1076,7 @@ impl std::str::FromStr for UpdateVocabularyInput {
                     #[allow(clippy::redundant_clone)]
                     "id" => intermediate_rep.id.push(<i32 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
-                    "part_of_speech" => intermediate_rep.part_of_speech.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "part_of_speech" => intermediate_rep.part_of_speech.push(<models::PartOfSpeech as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "spelling" => intermediate_rep.spelling.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
@@ -1342,9 +1396,8 @@ pub struct Vocabulary {
     #[serde(skip_serializing_if="Option::is_none")]
     pub id: Option<i32>,
 
-/// Note: inline enums are not fully supported by openapi-generator
     #[serde(rename = "part_of_speech")]
-    pub part_of_speech: String,
+    pub part_of_speech: models::PartOfSpeech,
 
     #[serde(rename = "spelling")]
     pub spelling: String,
@@ -1357,7 +1410,7 @@ pub struct Vocabulary {
 
 impl Vocabulary {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new(part_of_speech: String, spelling: String, meaning: String, ) -> Vocabulary {
+    pub fn new(part_of_speech: models::PartOfSpeech, spelling: String, meaning: String, ) -> Vocabulary {
         Vocabulary {
             id: None,
             part_of_speech,
@@ -1381,9 +1434,7 @@ impl std::string::ToString for Vocabulary {
                 ].join(",")
             }),
 
-
-            Some("part_of_speech".to_string()),
-            Some(self.part_of_speech.to_string()),
+            // Skipping part_of_speech in query parameter serialization
 
 
             Some("spelling".to_string()),
@@ -1411,7 +1462,7 @@ impl std::str::FromStr for Vocabulary {
         #[allow(dead_code)]
         struct IntermediateRep {
             pub id: Vec<i32>,
-            pub part_of_speech: Vec<String>,
+            pub part_of_speech: Vec<models::PartOfSpeech>,
             pub spelling: Vec<String>,
             pub meaning: Vec<String>,
         }
@@ -1434,7 +1485,7 @@ impl std::str::FromStr for Vocabulary {
                     #[allow(clippy::redundant_clone)]
                     "id" => intermediate_rep.id.push(<i32 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
-                    "part_of_speech" => intermediate_rep.part_of_speech.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "part_of_speech" => intermediate_rep.part_of_speech.push(<models::PartOfSpeech as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "spelling" => intermediate_rep.spelling.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
