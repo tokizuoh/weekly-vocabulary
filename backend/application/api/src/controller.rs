@@ -3,8 +3,8 @@ use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use generated::{
     models::{self, AllVocabularyResponse, RecentlyVocabularyResponse, Vocabulary},
-    DeleteIdDeleteResponse, UpdatePutResponse, VocabularyAllGetResponse, VocabularyPostResponse,
-    VocabularyRecentGetResponse,
+    DeleteIdDeleteResponse, VocabularyAllGetResponse, VocabularyPostResponse,
+    VocabularyPutResponse, VocabularyRecentGetResponse,
 };
 use mysql::{params, prelude::Queryable, Pool};
 
@@ -159,17 +159,17 @@ impl generated::Api for Api {
         }
     }
 
-    async fn update_put(
+    async fn vocabulary_put(
         &self,
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
         body: Option<models::UpdateVocabularyRequestBody>,
-    ) -> Result<UpdatePutResponse, String> {
+    ) -> Result<VocabularyPutResponse, String> {
         let body = match body {
             Some(body) => body,
             None => {
-                return Ok(UpdatePutResponse::Status400_BadRequest(
+                return Ok(VocabularyPutResponse::Status400_BadRequest(
                     generated::models::Error { message: None },
                 ));
             }
@@ -187,7 +187,7 @@ impl generated::Api for Api {
         match vocabulary.validate() {
             true => {}
             false => {
-                return Ok(UpdatePutResponse::Status400_BadRequest(
+                return Ok(VocabularyPutResponse::Status400_BadRequest(
                     generated::models::Error { message: None },
                 ));
             }
@@ -202,12 +202,12 @@ impl generated::Api for Api {
                 "id" => vocabulary.id,
             },
         ) {
-            Ok(_) => Ok(UpdatePutResponse::Status200_OkResponse(
+            Ok(_) => Ok(VocabularyPutResponse::Status200_OkResponse(
                 models::UpdateVocabularyOkResponse {
                     message: "Resource updated successfully".to_string(),
                 },
             )),
-            Err(e) => Ok(UpdatePutResponse::Status500_InternalServerError(
+            Err(e) => Ok(VocabularyPutResponse::Status500_InternalServerError(
                 models::Error {
                     message: Some(format!("Failed to update vocabulary: {}", e)),
                 },

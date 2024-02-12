@@ -34,23 +34,6 @@ pub enum DeleteIdDeleteResponse {
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
-pub enum UpdatePutResponse {
-    /// ok response
-    Status200_OkResponse
-    (models::UpdateVocabularyOkResponse)
-    ,
-    /// Bad Request
-    Status400_BadRequest
-    (models::Error)
-    ,
-    /// Internal Server Error
-    Status500_InternalServerError
-    (models::Error)
-}
-
-        #[derive(Debug, PartialEq, Serialize, Deserialize)]
-#[must_use]
-#[allow(clippy::large_enum_variant)]
 pub enum VocabularyAllGetResponse {
     /// ok response
     Status200_OkResponse
@@ -68,6 +51,23 @@ pub enum VocabularyPostResponse {
     /// ok response
     Status201_OkResponse
     (models::RegisterVocabularyOkResponse)
+    ,
+    /// Bad Request
+    Status400_BadRequest
+    (models::Error)
+    ,
+    /// Internal Server Error
+    Status500_InternalServerError
+    (models::Error)
+}
+
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum VocabularyPutResponse {
+    /// ok response
+    Status200_OkResponse
+    (models::UpdateVocabularyOkResponse)
     ,
     /// Bad Request
     Status400_BadRequest
@@ -111,16 +111,6 @@ pub trait Api {
                 ) -> Result<DeleteIdDeleteResponse, String>;
 
 
-                /// UpdatePut - PUT /update
-                async fn update_put(
-                &self,
-                method: Method,
-                host: Host,
-                cookies: CookieJar,
-                        body: Option<models::UpdateVocabularyRequestBody>,
-                ) -> Result<UpdatePutResponse, String>;
-
-
                 /// VocabularyAllGet - GET /vocabulary/all
                 async fn vocabulary_all_get(
                 &self,
@@ -138,6 +128,16 @@ pub trait Api {
                 cookies: CookieJar,
                         body: Option<models::RegisterVocabularyRequestBody>,
                 ) -> Result<VocabularyPostResponse, String>;
+
+
+                /// VocabularyPut - PUT /vocabulary
+                async fn vocabulary_put(
+                &self,
+                method: Method,
+                host: Host,
+                cookies: CookieJar,
+                        body: Option<models::UpdateVocabularyRequestBody>,
+                ) -> Result<VocabularyPutResponse, String>;
 
 
                 /// VocabularyRecentGet - GET /vocabulary/recent

@@ -23,7 +23,7 @@ curl-update:
 	-X PUT \
 	-H "Content-Type: application/json" \
 	-d '{ "vocabulary": { "id": $(ID), "spelling": "CHANGED-SPELLING", "meaning": "CHANGED-MEANING", "part_of_speech": "interjection" } }' \
-	localhost:8080/update
+	localhost:8080/vocabulary
 curl-delete:
 	curl --dump-header - \
 	-X DELETE \
