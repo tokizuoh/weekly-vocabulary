@@ -3,7 +3,7 @@ use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use generated::{
     models::{self, AllVocabularyResponse, RecentlyVocabularyResponse, Vocabulary},
-    VocabularyIdDeleteResponse, VocabularyAllGetResponse, VocabularyPostResponse,
+    VocabularyAllGetResponse, VocabularyIdDeleteResponse, VocabularyPostResponse,
     VocabularyPutResponse, VocabularyRecentGetResponse,
 };
 use mysql::{params, prelude::Queryable, Pool};
