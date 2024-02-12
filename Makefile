@@ -14,7 +14,7 @@ curl-get-all:
 	localhost:8080/get/all
 curl-register:
 	curl --dump-header - \
-	-X PUT \
+	-X POST \
 	-H "Content-Type: application/json" \
 	-d '{ "vocabulary": { "spelling": "run", "meaning": "moved at a speed faster than a walk", "part_of_speech": "verb" } }' \
 	localhost:8080/register

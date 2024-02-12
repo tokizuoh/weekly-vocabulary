@@ -32,7 +32,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
   /register:
-    put:
+    post:
       description: "Regisiter vocabulary"
       requestBody:
         description: "vocabulary"

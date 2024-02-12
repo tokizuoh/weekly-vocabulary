@@ -64,7 +64,7 @@ pub enum GetRecentGetResponse {
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
-pub enum RegisterPutResponse {
+pub enum RegisterPostResponse {
     /// ok response
     Status200_OkResponse
     (models::RegisterVocabularyOkResponse)
@@ -129,14 +129,14 @@ pub trait Api {
                 ) -> Result<GetRecentGetResponse, String>;
 
 
-                /// RegisterPut - PUT /register
-                async fn register_put(
+                /// RegisterPost - POST /register
+                async fn register_post(
                 &self,
                 method: Method,
                 host: Host,
                 cookies: CookieJar,
                         body: Option<models::RegisterVocabularyRequestBody>,
-                ) -> Result<RegisterPutResponse, String>;
+                ) -> Result<RegisterPostResponse, String>;
 
 
                 /// UpdatePut - PUT /update

@@ -16,7 +16,7 @@ use crate::{Api,
      DeleteDeleteResponse,
      GetAllGetResponse,
      GetRecentGetResponse,
-     RegisterPutResponse,
+     RegisterPostResponse,
      UpdatePutResponse
 };
 
@@ -38,7 +38,7 @@ where
             get(get_recent_get::<I, A>)
         )
         .route("/register",
-            put(register_put::<I, A>)
+            post(register_post::<I, A>)
         )
         .route("/update",
             put(update_put::<I, A>)
@@ -395,21 +395,21 @@ where
 
     #[derive(validator::Validate)]
     #[allow(dead_code)]
-    struct RegisterPutBodyValidator<'a> {
+    struct RegisterPostBodyValidator<'a> {
             #[validate]
           body: &'a models::RegisterVocabularyRequestBody,
     }
 
 
 #[tracing::instrument(skip_all)]
-fn register_put_validation(
+fn register_post_validation(
         body: Option<models::RegisterVocabularyRequestBody>,
 ) -> std::result::Result<(
         Option<models::RegisterVocabularyRequestBody>,
 ), ValidationErrors>
 {
             if let Some(body) = &body {
-              let b = RegisterPutBodyValidator { body };
+              let b = RegisterPostBodyValidator { body };
               b.validate()?;
             }
 
@@ -418,9 +418,9 @@ Ok((
 ))
 }
 
-/// RegisterPut - PUT /register
+/// RegisterPost - POST /register
 #[tracing::instrument(skip_all)]
-async fn register_put<I, A>(
+async fn register_post<I, A>(
   method: Method,
   host: Host,
   cookies: CookieJar,
@@ -434,7 +434,7 @@ where
 
       #[allow(clippy::redundant_closure)]
       let validation = tokio::task::spawn_blocking(move || 
-    register_put_validation(
+    register_post_validation(
           body,
     )
   ).await.unwrap();
@@ -448,7 +448,7 @@ where
             .map_err(|_| StatusCode::BAD_REQUEST); 
   };
 
-  let result = api_impl.as_ref().register_put(
+  let result = api_impl.as_ref().register_post(
       method,
       host,
       cookies,
@@ -459,7 +459,7 @@ where
 
   let resp = match result {
                                             Ok(rsp) => match rsp {
-                                                RegisterPutResponse::Status200_OkResponse
+                                                RegisterPostResponse::Status200_OkResponse
                                                     (body)
                                                 => {
 
@@ -478,7 +478,7 @@ where
                                                       })).await.unwrap()?;
                                                   response.body(Body::from(body_content))
                                                 },
-                                                RegisterPutResponse::Status400_BadRequest
+                                                RegisterPostResponse::Status400_BadRequest
                                                     (body)
                                                 => {
 
@@ -497,7 +497,7 @@ where
                                                       })).await.unwrap()?;
                                                   response.body(Body::from(body_content))
                                                 },
-                                                RegisterPutResponse::Status500_InternalServerError
+                                                RegisterPostResponse::Status500_InternalServerError
                                                     (body)
                                                 => {
 
