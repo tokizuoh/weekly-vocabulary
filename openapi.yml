@@ -39,6 +39,17 @@ components:
           type: integer
         part_of_speech:
           type: string
+          enum:
+            [
+              noun,
+              pronoun,
+              adjective,
+              verb,
+              adverb,
+              preposition,
+              conjunction,
+              interjection,
+            ]
         spelling:
           type: string
         meaning:

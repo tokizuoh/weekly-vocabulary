@@ -270,6 +270,7 @@ pub struct Vocabulary {
     #[serde(rename = "id")]
     pub id: i32,
 
+/// Note: inline enums are not fully supported by openapi-generator
     #[serde(rename = "part_of_speech")]
     pub part_of_speech: String,
 
