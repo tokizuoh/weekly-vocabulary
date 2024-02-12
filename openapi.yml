@@ -7,7 +7,7 @@ info:
 paths:
   /get/recent:
     get:
-      description: "Return recently regisitered vocabulary"
+      description: "Return recently registered vocabulary"
       responses:
         "200":
           description: "ok response"
