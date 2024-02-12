@@ -196,7 +196,7 @@ impl generated::Api for Api {
         }
 
         match conn.exec_drop(
-        r"UPDATE vocabulary SET spelling=(:spelling), meaning=(:meaning), part_of_speech=(:part_of_speech), updated_at=CURTIME() WHERE id=(:id);",
+            r"UPDATE vocabulary SET spelling=(:spelling), meaning=(:meaning), part_of_speech=(:part_of_speech), updated_at=CURTIME() WHERE id=(:id);",
             params! {
                 "spelling" => vocabulary.spelling,
                 "meaning" => vocabulary.meaning,
