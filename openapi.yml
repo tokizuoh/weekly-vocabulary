@@ -29,10 +29,35 @@ paths:
                 $ref: "#/components/schemas/AllVocabularyResponse"
         "500":
           $ref: "#/components/responses/InternalServerError"
+  /register:
+    put:
+      requestBody:
+        description: "vocabulary"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterVocabularyRequestBody"
+      responses:
+        "200":
+          description: "Regisiter vocabulary"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterVocabularyOkResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 components:
   responses:
     NotFound:
       description: "The specified resource was not found"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    BadRequest:
+      description: "Bad Request"
       content:
         application/json:
           schema:
@@ -86,6 +111,41 @@ components:
       required:
         - vocabulary_list
         - total_count
+    RegisterVocabularyInput:
+      properties:
+        part_of_speech:
+          type: string
+          enum:
+            [
+              noun,
+              pronoun,
+              adjective,
+              verb,
+              adverb,
+              preposition,
+              conjunction,
+              interjection,
+            ]
+        spelling:
+          type: string
+        meaning:
+          type: string
+      required:
+        - part_of_speech
+        - spelling
+        - meaning
+    RegisterVocabularyRequestBody:
+      properties:
+        vocabulary:
+          $ref: "#/components/schemas/RegisterVocabularyInput"
+      required:
+        - vocabulary
+    RegisterVocabularyOkResponse:
+      properties:
+        message:
+          type: string
+      required:
+        - message
     Error:
       type: object
       properties:

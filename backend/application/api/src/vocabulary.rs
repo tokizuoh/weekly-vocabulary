@@ -1,6 +1,6 @@
 use generated::models::Vocabulary;
 
-trait Validatable {
+pub trait Validatable {
     fn validate(&self) -> bool;
 }
 

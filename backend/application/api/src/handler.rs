@@ -5,13 +5,6 @@
 // use std::sync::Arc;
 
 // #[derive(Debug, Deserialize)]
-// pub struct RegisterVocabularyInput {
-//     pub part_of_speech: String,
-//     pub spelling: String,
-//     pub meaning: String,
-// }
-
-// #[derive(Debug, Deserialize)]
 // pub struct DeleteVocabularyInput {
 //     pub id: String,
 // }
@@ -22,51 +15,6 @@
 //     pub part_of_speech: String,
 //     pub spelling: String,
 //     pub meaning: String,
-// }
-
-
-// // TODO: rewrite
-// pub async fn register_vocabulary(
-//     State(data): State<Arc<AppState>>,
-//     Json(body): Json<RegisterVocabularyInput>,
-// ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
-//     let mut conn = data.db.get_conn().unwrap();
-
-//     match PartOfSpeech::from_string(body.part_of_speech.clone()) {
-//         Ok(_) => {}
-//         Err(_) => {
-//             let error_response = serde_json::json!({
-//                 "message": format!("Invalid part_of_speech: {}", body.part_of_speech),
-//             });
-
-//             return Err((StatusCode::BAD_REQUEST, Json(error_response)));
-//         }
-//     };
-
-//     match conn.exec_drop(
-//         r"INSERT INTO vocabulary (spelling, meaning, part_of_speech)
-//             VALUES(:spelling, :meaning, :part_of_speech)",
-//         params! {
-//             "spelling" => body.spelling,
-//             "meaning" => body.meaning,
-//             "part_of_speech" => body.part_of_speech.clone()
-//         },
-//     ) {
-//         Ok(_) => {
-//             let json_response = serde_json::json!({
-//                "message": "Vocabulary registered successfully"
-//             });
-
-//             Ok(Json(json_response))
-//         }
-//         Err(e) => {
-//             let error_response = serde_json::json!({
-//                 "message": format!("Failed to update vocabulary: {}", e),
-//             });
-
-//             Err((StatusCode::INTERNAL_SERVER_ERROR, Json(error_response)))
-//         }
-//     }
 // }
 
 // // TODO: rewrite

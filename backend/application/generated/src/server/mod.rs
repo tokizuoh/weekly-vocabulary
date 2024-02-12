@@ -14,7 +14,8 @@ use crate::models;
 
 use crate::{Api,
      GetAllGetResponse,
-     GetRecentGetResponse
+     GetRecentGetResponse,
+     RegisterPutResponse
 };
 
 /// Setup API Server.
@@ -30,6 +31,9 @@ where
         )
         .route("/get/recent",
             get(get_recent_get::<I, A>)
+        )
+        .route("/register",
+            put(register_put::<I, A>)
         )
         .with_state(api_impl)
 }
@@ -179,7 +183,7 @@ where
 
   let resp = match result {
                                             Ok(rsp) => match rsp {
-                                                GetRecentGetResponse::Status200_GetRecentlyRegisiteredVocabulary
+                                                GetRecentGetResponse::Status200_ReturnRecentlyRegisiteredVocabulary
                                                     (body)
                                                 => {
 
@@ -218,6 +222,140 @@ where
                                                   response.body(Body::from(body_content))
                                                 },
                                                 GetRecentGetResponse::Status500_InternalServerError
+                                                    (body)
+                                                => {
+
+                                                  let mut response = response.status(500);
+                                                  {
+                                                    let mut response_headers = response.headers_mut().unwrap();
+                                                    response_headers.insert(
+                                                        CONTENT_TYPE,
+                                                        HeaderValue::from_str("application/json").map_err(|e| { error!(error = ?e); StatusCode::INTERNAL_SERVER_ERROR })?);
+                                                  }
+
+                                                  let body_content =  tokio::task::spawn_blocking(move ||
+                                                      serde_json::to_vec(&body).map_err(|e| {
+                                                        error!(error = ?e);
+                                                        StatusCode::INTERNAL_SERVER_ERROR
+                                                      })).await.unwrap()?;
+                                                  response.body(Body::from(body_content))
+                                                },
+                                            },
+                                            Err(_) => {
+                                                // Application code returned an error. This should not happen, as the implementation should
+                                                // return a valid response.
+                                                response.status(500).body(Body::empty())
+                                            },
+                                        };
+
+                                        resp.map_err(|e| { error!(error = ?e); StatusCode::INTERNAL_SERVER_ERROR })
+}
+
+    #[derive(validator::Validate)]
+    #[allow(dead_code)]
+    struct RegisterPutBodyValidator<'a> {
+            #[validate]
+          body: &'a models::RegisterVocabularyRequestBody,
+    }
+
+
+#[tracing::instrument(skip_all)]
+fn register_put_validation(
+        body: Option<models::RegisterVocabularyRequestBody>,
+) -> std::result::Result<(
+        Option<models::RegisterVocabularyRequestBody>,
+), ValidationErrors>
+{
+            if let Some(body) = &body {
+              let b = RegisterPutBodyValidator { body };
+              b.validate()?;
+            }
+
+Ok((
+    body,
+))
+}
+
+/// RegisterPut - PUT /register
+#[tracing::instrument(skip_all)]
+async fn register_put<I, A>(
+  method: Method,
+  host: Host,
+  cookies: CookieJar,
+ State(api_impl): State<I>,
+          Json(body): Json<Option<models::RegisterVocabularyRequestBody>>,
+) -> Result<Response, StatusCode>
+where 
+    I: AsRef<A> + Send + Sync,
+    A: Api,
+{
+
+      #[allow(clippy::redundant_closure)]
+      let validation = tokio::task::spawn_blocking(move || 
+    register_put_validation(
+          body,
+    )
+  ).await.unwrap();
+
+  let Ok((
+      body,
+  )) = validation else {
+    return Response::builder()
+            .status(StatusCode::BAD_REQUEST)
+            .body(Body::from(validation.unwrap_err().to_string()))
+            .map_err(|_| StatusCode::BAD_REQUEST); 
+  };
+
+  let result = api_impl.as_ref().register_put(
+      method,
+      host,
+      cookies,
+              body,
+  ).await;
+
+  let mut response = Response::builder();
+
+  let resp = match result {
+                                            Ok(rsp) => match rsp {
+                                                RegisterPutResponse::Status200_RegisiterVocabulary
+                                                    (body)
+                                                => {
+
+                                                  let mut response = response.status(200);
+                                                  {
+                                                    let mut response_headers = response.headers_mut().unwrap();
+                                                    response_headers.insert(
+                                                        CONTENT_TYPE,
+                                                        HeaderValue::from_str("application/json").map_err(|e| { error!(error = ?e); StatusCode::INTERNAL_SERVER_ERROR })?);
+                                                  }
+
+                                                  let body_content =  tokio::task::spawn_blocking(move ||
+                                                      serde_json::to_vec(&body).map_err(|e| {
+                                                        error!(error = ?e);
+                                                        StatusCode::INTERNAL_SERVER_ERROR
+                                                      })).await.unwrap()?;
+                                                  response.body(Body::from(body_content))
+                                                },
+                                                RegisterPutResponse::Status400_BadRequest
+                                                    (body)
+                                                => {
+
+                                                  let mut response = response.status(400);
+                                                  {
+                                                    let mut response_headers = response.headers_mut().unwrap();
+                                                    response_headers.insert(
+                                                        CONTENT_TYPE,
+                                                        HeaderValue::from_str("application/json").map_err(|e| { error!(error = ?e); StatusCode::INTERNAL_SERVER_ERROR })?);
+                                                  }
+
+                                                  let body_content =  tokio::task::spawn_blocking(move ||
+                                                      serde_json::to_vec(&body).map_err(|e| {
+                                                        error!(error = ?e);
+                                                        StatusCode::INTERNAL_SERVER_ERROR
+                                                      })).await.unwrap()?;
+                                                  response.body(Body::from(body_content))
+                                                },
+                                                RegisterPutResponse::Status500_InternalServerError
                                                     (body)
                                                 => {
 

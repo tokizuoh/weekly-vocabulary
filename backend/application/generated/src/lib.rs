@@ -31,12 +31,29 @@ pub enum GetAllGetResponse {
 #[must_use]
 #[allow(clippy::large_enum_variant)]
 pub enum GetRecentGetResponse {
-    /// Get recently regisitered vocabulary
-    Status200_GetRecentlyRegisiteredVocabulary
+    /// Return recently regisitered vocabulary
+    Status200_ReturnRecentlyRegisiteredVocabulary
     (models::RecentlyVocabularyResponse)
     ,
     /// The specified resource was not found
     Status404_TheSpecifiedResourceWasNotFound
+    (models::Error)
+    ,
+    /// Internal Server Error
+    Status500_InternalServerError
+    (models::Error)
+}
+
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum RegisterPutResponse {
+    /// Regisiter vocabulary
+    Status200_RegisiterVocabulary
+    (models::RegisterVocabularyOkResponse)
+    ,
+    /// Bad Request
+    Status400_BadRequest
     (models::Error)
     ,
     /// Internal Server Error
@@ -66,6 +83,16 @@ pub trait Api {
                 host: Host,
                 cookies: CookieJar,
                 ) -> Result<GetRecentGetResponse, String>;
+
+
+                /// RegisterPut - PUT /register
+                async fn register_put(
+                &self,
+                method: Method,
+                host: Host,
+                cookies: CookieJar,
+                        body: Option<models::RegisterVocabularyRequestBody>,
+                ) -> Result<RegisterPutResponse, String>;
 
 }
 
