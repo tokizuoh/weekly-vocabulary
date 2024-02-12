@@ -1,4 +1,4 @@
-oenapi: 3.0.3
+openapi: 3.0.3
 info:
   title: "weekend-vocabulary"
   description: |
@@ -21,6 +21,10 @@ paths:
                     type: string
                   meaning:
                     type: string
+                required:
+                  - part_of_speech
+                  - spelling
+                  - meaning
         "404":
           description: "Not Found"
         "500":

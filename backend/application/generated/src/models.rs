@@ -17,27 +17,24 @@ use crate::{models, types::*};
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct GetRecentGet200Response {
     #[serde(rename = "part_of_speech")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub part_of_speech: Option<String>,
+    pub part_of_speech: String,
 
     #[serde(rename = "spelling")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub spelling: Option<String>,
+    pub spelling: String,
 
     #[serde(rename = "meaning")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub meaning: Option<String>,
+    pub meaning: String,
 
 }
 
 
 impl GetRecentGet200Response {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> GetRecentGet200Response {
+    pub fn new(part_of_speech: String, spelling: String, meaning: String, ) -> GetRecentGet200Response {
         GetRecentGet200Response {
-            part_of_speech: None,
-            spelling: None,
-            meaning: None,
+            part_of_speech,
+            spelling,
+            meaning,
         }
     }
 }
@@ -49,28 +46,16 @@ impl std::string::ToString for GetRecentGet200Response {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
 
-            self.part_of_speech.as_ref().map(|part_of_speech| {
-                [
-                    "part_of_speech".to_string(),
-                    part_of_speech.to_string(),
-                ].join(",")
-            }),
+            Some("part_of_speech".to_string()),
+            Some(self.part_of_speech.to_string()),
 
 
-            self.spelling.as_ref().map(|spelling| {
-                [
-                    "spelling".to_string(),
-                    spelling.to_string(),
-                ].join(",")
-            }),
+            Some("spelling".to_string()),
+            Some(self.spelling.to_string()),
 
 
-            self.meaning.as_ref().map(|meaning| {
-                [
-                    "meaning".to_string(),
-                    meaning.to_string(),
-                ].join(",")
-            }),
+            Some("meaning".to_string()),
+            Some(self.meaning.to_string()),
 
         ];
 
@@ -125,9 +110,9 @@ impl std::str::FromStr for GetRecentGet200Response {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(GetRecentGet200Response {
-            part_of_speech: intermediate_rep.part_of_speech.into_iter().next(),
-            spelling: intermediate_rep.spelling.into_iter().next(),
-            meaning: intermediate_rep.meaning.into_iter().next(),
+            part_of_speech: intermediate_rep.part_of_speech.into_iter().next().ok_or_else(|| "part_of_speech missing in GetRecentGet200Response".to_string())?,
+            spelling: intermediate_rep.spelling.into_iter().next().ok_or_else(|| "spelling missing in GetRecentGet200Response".to_string())?,
+            meaning: intermediate_rep.meaning.into_iter().next().ok_or_else(|| "meaning missing in GetRecentGet200Response".to_string())?,
         })
     }
 }
