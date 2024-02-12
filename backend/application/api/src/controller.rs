@@ -2,7 +2,10 @@ use crate::vocabulary::{PartOfSpeech, Vocabulary};
 use async_trait::async_trait;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
-use generated::{models::GetRecentGet200Response, GetRecentGetResponse};
+use generated::{
+    models::RecentlyVocabularyResponse, models::Vocabulary as GeneratedVocabulary,
+    GetRecentGetResponse,
+};
 use mysql::{prelude::Queryable, Pool};
 
 #[derive(Clone)]
@@ -51,10 +54,13 @@ impl generated::Api for Api {
                 if let Some(vocabulary) = value.get(0) {
                     Ok(
                         GetRecentGetResponse::Status200_GetRecentlyRegisiteredVocabulary(
-                            GetRecentGet200Response {
-                                part_of_speech: vocabulary.part_of_speech.text().to_string(),
-                                spelling: vocabulary.spelling.clone(),
-                                meaning: vocabulary.meaning.clone(),
+                            RecentlyVocabularyResponse {
+                                vocabulary: GeneratedVocabulary {
+                                    id: 1,
+                                    part_of_speech: vocabulary.part_of_speech.text().to_string(),
+                                    spelling: vocabulary.spelling.clone(),
+                                    meaning: vocabulary.meaning.clone(),
+                                },
                             },
                         ),
                     )

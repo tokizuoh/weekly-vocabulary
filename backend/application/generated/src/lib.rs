@@ -20,7 +20,7 @@ pub const API_VERSION: &str = "1.0.0";
 pub enum GetRecentGetResponse {
     /// Get recently regisitered vocabulary
     Status200_GetRecentlyRegisiteredVocabulary
-    (models::GetRecentGet200Response)
+    (models::RecentlyVocabularyResponse)
     ,
     /// Not Found
     Status404_NotFound

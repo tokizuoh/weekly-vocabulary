@@ -13,19 +13,31 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  part_of_speech:
-                    type: string
-                  spelling:
-                    type: string
-                  meaning:
-                    type: string
-                required:
-                  - part_of_speech
-                  - spelling
-                  - meaning
+                $ref: "#/components/schemas/RecentlyVocabularyResponse"
         "404":
           description: "Not Found"
         "500":
           description: "Internal Server Error"
+components:
+  schemas:
+    Vocabulary:
+      properties:
+        id:
+          type: integer
+        part_of_speech:
+          type: string
+        spelling:
+          type: string
+        meaning:
+          type: string
+      required:
+        - id
+        - part_of_speech
+        - spelling
+        - meaning
+    RecentlyVocabularyResponse:
+      properties:
+        vocabulary:
+          $ref: "#/components/schemas/Vocabulary"
+      required:
+        - vocabulary
