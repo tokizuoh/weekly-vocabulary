@@ -147,12 +147,12 @@ impl generated::Api for Api {
         ) {
             Ok(_) => Ok(RegisterPutResponse::Status200_OkResponse(
                 models::RegisterVocabularyOkResponse {
-                    message: "Resource updated successfully".to_string(),
+                    message: "Resource registered successfully".to_string(),
                 },
             )),
             Err(e) => Ok(RegisterPutResponse::Status500_InternalServerError(
                 models::Error {
-                    message: Some(format!("Failed to update vocabulary: {}", e)),
+                    message: Some(format!("Failed to register vocabulary: {}", e)),
                 },
             )),
         }
