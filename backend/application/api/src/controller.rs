@@ -3,7 +3,7 @@ use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use generated::{
     models::{self, AllVocabularyResponse, RecentlyVocabularyResponse, Vocabulary},
-    DeleteIdDeleteResponse, RegisterPostResponse, UpdatePutResponse, VocabularyAllGetResponse,
+    DeleteIdDeleteResponse, UpdatePutResponse, VocabularyAllGetResponse, VocabularyPostResponse,
     VocabularyRecentGetResponse,
 };
 use mysql::{params, prelude::Queryable, Pool};
@@ -104,17 +104,17 @@ impl generated::Api for Api {
         }
     }
 
-    async fn register_post(
+    async fn vocabulary_post(
         &self,
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
         body: Option<models::RegisterVocabularyRequestBody>,
-    ) -> Result<RegisterPostResponse, String> {
+    ) -> Result<VocabularyPostResponse, String> {
         let body = match body {
             Some(body) => body,
             None => {
-                return Ok(RegisterPostResponse::Status400_BadRequest(
+                return Ok(VocabularyPostResponse::Status400_BadRequest(
                     generated::models::Error { message: None },
                 ));
             }
@@ -131,7 +131,7 @@ impl generated::Api for Api {
         match vocabulary.validate() {
             true => {}
             false => {
-                return Ok(RegisterPostResponse::Status400_BadRequest(
+                return Ok(VocabularyPostResponse::Status400_BadRequest(
                     generated::models::Error { message: None },
                 ));
             }
@@ -146,12 +146,12 @@ impl generated::Api for Api {
                 "part_of_speech" => vocabulary.part_of_speech,
             },
         ) {
-            Ok(_) => Ok(RegisterPostResponse::Status201_OkResponse(
+            Ok(_) => Ok(VocabularyPostResponse::Status201_OkResponse(
                 models::RegisterVocabularyOkResponse {
                     message: "Resource registered successfully".to_string(),
                 },
             )),
-            Err(e) => Ok(RegisterPostResponse::Status500_InternalServerError(
+            Err(e) => Ok(VocabularyPostResponse::Status500_InternalServerError(
                 models::Error {
                     message: Some(format!("Failed to register vocabulary: {}", e)),
                 },

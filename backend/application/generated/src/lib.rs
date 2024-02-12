@@ -34,23 +34,6 @@ pub enum DeleteIdDeleteResponse {
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
-pub enum RegisterPostResponse {
-    /// ok response
-    Status201_OkResponse
-    (models::RegisterVocabularyOkResponse)
-    ,
-    /// Bad Request
-    Status400_BadRequest
-    (models::Error)
-    ,
-    /// Internal Server Error
-    Status500_InternalServerError
-    (models::Error)
-}
-
-        #[derive(Debug, PartialEq, Serialize, Deserialize)]
-#[must_use]
-#[allow(clippy::large_enum_variant)]
 pub enum UpdatePutResponse {
     /// ok response
     Status200_OkResponse
@@ -72,6 +55,23 @@ pub enum VocabularyAllGetResponse {
     /// ok response
     Status200_OkResponse
     (models::AllVocabularyResponse)
+    ,
+    /// Internal Server Error
+    Status500_InternalServerError
+    (models::Error)
+}
+
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum VocabularyPostResponse {
+    /// ok response
+    Status201_OkResponse
+    (models::RegisterVocabularyOkResponse)
+    ,
+    /// Bad Request
+    Status400_BadRequest
+    (models::Error)
     ,
     /// Internal Server Error
     Status500_InternalServerError
@@ -111,16 +111,6 @@ pub trait Api {
                 ) -> Result<DeleteIdDeleteResponse, String>;
 
 
-                /// RegisterPost - POST /register
-                async fn register_post(
-                &self,
-                method: Method,
-                host: Host,
-                cookies: CookieJar,
-                        body: Option<models::RegisterVocabularyRequestBody>,
-                ) -> Result<RegisterPostResponse, String>;
-
-
                 /// UpdatePut - PUT /update
                 async fn update_put(
                 &self,
@@ -138,6 +128,16 @@ pub trait Api {
                 host: Host,
                 cookies: CookieJar,
                 ) -> Result<VocabularyAllGetResponse, String>;
+
+
+                /// VocabularyPost - POST /vocabulary
+                async fn vocabulary_post(
+                &self,
+                method: Method,
+                host: Host,
+                cookies: CookieJar,
+                        body: Option<models::RegisterVocabularyRequestBody>,
+                ) -> Result<VocabularyPostResponse, String>;
 
 
                 /// VocabularyRecentGet - GET /vocabulary/recent

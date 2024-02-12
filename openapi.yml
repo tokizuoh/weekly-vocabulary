@@ -31,7 +31,7 @@ paths:
                 $ref: "#/components/schemas/AllVocabularyResponse"
         "500":
           $ref: "#/components/responses/InternalServerError"
-  /register:
+  /vocabulary:
     post:
       description: "Regisiter vocabulary"
       requestBody:
