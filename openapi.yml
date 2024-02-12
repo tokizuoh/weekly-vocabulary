@@ -7,7 +7,7 @@ info:
 paths:
   /vocabulary/recent:
     get:
-      description: "Return recently registered vocabulary"
+      description: "Get recently registered vocabulary"
       responses:
         "200":
           description: "ok response"
@@ -21,7 +21,7 @@ paths:
           $ref: "#/components/responses/InternalServerError"
   /vocabulary/all:
     get:
-      description: "Return all regisitered vocabulary list"
+      description: "Get all regisitered vocabulary list"
       responses:
         "200":
           description: "ok response"
