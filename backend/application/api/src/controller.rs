@@ -10,7 +10,7 @@ use generated::{
 };
 use mysql::{params, prelude::Queryable, Pool};
 
-use crate::vocabulary::Validatable;
+use crate::validatable::Validatable;
 
 #[derive(Clone)]
 pub struct Api {
