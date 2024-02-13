@@ -1,4 +1,4 @@
-.PHONY: generate, curl-get-recent, curl-get-all, curl-put
+.PHONY: generate, curl-get-vocabulary-recent, curl-get-vocabulary-all, curl-post-vocabulary, curl-delete-vocabulary-id
 
 generate:
 	./node_modules/.bin/openapi-generator-cli generate \
