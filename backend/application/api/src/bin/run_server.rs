@@ -14,7 +14,12 @@ async fn main() {
     let pool = match Pool::new(url.as_str()) {
         Ok(pool) => pool,
         Err(err) => {
-            eprintln!("Failed to connect to tha database: {}", err);
+            tracing::error!(
+                "Failed to connect to tha database: {} at {}/#L{}",
+                err,
+                std::module_path!(),
+                line!()
+            );
             std::process::exit(1);
         }
     };
