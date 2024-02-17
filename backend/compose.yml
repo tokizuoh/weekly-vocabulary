@@ -16,7 +16,7 @@ services:
     volumes:
       - ./:/app
     working_dir: /app/application
-    command: /bin/sh -c "cargo run -p api --bin generate_sample_records && cargo watch -s 'cargo run -p api --bin run_server'"
+    command: /bin/sh -c "cargo run -p api --bin generate_sample_records && cargo watch -s 'RUST_LOG=tower_http=trace cargo run -p api --bin run_server'"
     networks:
       - development
 
