@@ -24,7 +24,6 @@ pub enum VocabularyAllGetResponse {
     ,
     /// Internal Server Error
     Status500_InternalServerError
-    (models::Error)
 }
 
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -41,7 +40,6 @@ pub enum VocabularyIdDeleteResponse {
     ,
     /// Internal Server Error
     Status500_InternalServerError
-    (models::Error)
 }
 
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -58,7 +56,6 @@ pub enum VocabularyPostResponse {
     ,
     /// Internal Server Error
     Status500_InternalServerError
-    (models::Error)
 }
 
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -75,7 +72,6 @@ pub enum VocabularyPutResponse {
     ,
     /// Internal Server Error
     Status500_InternalServerError
-    (models::Error)
 }
 
         #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -92,7 +88,6 @@ pub enum VocabularyRecentGetResponse {
     ,
     /// Internal Server Error
     Status500_InternalServerError
-    (models::Error)
 }
 
 

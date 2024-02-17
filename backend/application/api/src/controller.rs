@@ -73,11 +73,7 @@ impl generated::Api for Api {
                     line!()
                 );
 
-                Ok(VocabularyRecentGetResponse::Status500_InternalServerError(
-                    generated::models::Error {
-                        message: Some(e.to_string()),
-                    },
-                ))
+                Ok(VocabularyRecentGetResponse::Status500_InternalServerError)
             }
         }
     }
@@ -115,11 +111,7 @@ impl generated::Api for Api {
                     line!()
                 );
 
-                Ok(VocabularyAllGetResponse::Status500_InternalServerError(
-                    generated::models::Error {
-                        message: Some(e.to_string()),
-                    },
-                ))
+                Ok(VocabularyAllGetResponse::Status500_InternalServerError)
             }
         }
     }
@@ -172,11 +164,9 @@ impl generated::Api for Api {
                     message: "Resource registered successfully".to_string(),
                 },
             )),
-            Err(e) => Ok(VocabularyPostResponse::Status500_InternalServerError(
-                models::Error {
-                    message: Some(format!("Failed to register vocabulary: {}", e)),
-                },
-            )),
+            Err(e) => {
+                Ok(VocabularyPostResponse::Status500_InternalServerError)
+            },
         }
     }
 
@@ -236,11 +226,7 @@ impl generated::Api for Api {
                     line!()
                 );
                 
-                Ok(VocabularyPutResponse::Status500_InternalServerError(
-                    models::Error {
-                        message: Some(format!("Failed to update vocabulary: {}", e)),
-                    },
-                ))
+                Ok(VocabularyPutResponse::Status500_InternalServerError)
             },
         }
     }
@@ -273,11 +259,7 @@ impl generated::Api for Api {
                     line!()
                 );
 
-                Ok(VocabularyIdDeleteResponse::Status500_InternalServerError(
-                    models::Error {
-                        message: Some(format!("Failed to delete vocabulary: {}", e)),
-                    },
-                ))
+                Ok(VocabularyIdDeleteResponse::Status500_InternalServerError)
             },
         }
     }
