@@ -65,11 +65,20 @@ impl generated::Api for Api {
                     )
                 }
             }
-            Err(e) => Ok(VocabularyRecentGetResponse::Status500_InternalServerError(
-                generated::models::Error {
-                    message: Some(e.to_string()),
-                },
-            )),
+            Err(e) => {
+                tracing::error!(
+                    "Failed to execute the query: {} at {}/#L{}",
+                    e,
+                    std::module_path!(),
+                    line!()
+                );
+
+                Ok(VocabularyRecentGetResponse::Status500_InternalServerError(
+                    generated::models::Error {
+                        message: Some(e.to_string()),
+                    },
+                ))
+            }
         }
     }
 
@@ -98,11 +107,20 @@ impl generated::Api for Api {
                     total_count: list.len() as i32,
                 },
             )),
-            Err(e) => Ok(VocabularyAllGetResponse::Status500_InternalServerError(
-                generated::models::Error {
-                    message: Some(e.to_string()),
-                },
-            )),
+            Err(e) => {
+                tracing::error!(
+                    "Failed to execute the query: {} at {}/#L{}",
+                    e,
+                    std::module_path!(),
+                    line!()
+                );
+
+                Ok(VocabularyAllGetResponse::Status500_InternalServerError(
+                    generated::models::Error {
+                        message: Some(e.to_string()),
+                    },
+                ))
+            }
         }
     }
 
@@ -210,11 +228,20 @@ impl generated::Api for Api {
                     message: "Resource updated successfully".to_string(),
                 },
             )),
-            Err(e) => Ok(VocabularyPutResponse::Status500_InternalServerError(
-                models::Error {
-                    message: Some(format!("Failed to update vocabulary: {}", e)),
-                },
-            )),
+            Err(e) => {
+                tracing::error!(
+                    "Failed to execute the query: {} at {}/#L{}",
+                    e,
+                    std::module_path!(),
+                    line!()
+                );
+                
+                Ok(VocabularyPutResponse::Status500_InternalServerError(
+                    models::Error {
+                        message: Some(format!("Failed to update vocabulary: {}", e)),
+                    },
+                ))
+            },
         }
     }
 
@@ -238,11 +265,20 @@ impl generated::Api for Api {
                     message: "Resource deleted successfully".to_string(),
                 },
             )),
-            Err(e) => Ok(VocabularyIdDeleteResponse::Status500_InternalServerError(
-                models::Error {
-                    message: Some(format!("Failed to delete vocabulary: {}", e)),
-                },
-            )),
+            Err(e) => {
+                tracing::error!(
+                    "Failed to execute the query: {} at {}/#L{}",
+                    e,
+                    std::module_path!(),
+                    line!()
+                );
+
+                Ok(VocabularyIdDeleteResponse::Status500_InternalServerError(
+                    models::Error {
+                        message: Some(format!("Failed to delete vocabulary: {}", e)),
+                    },
+                ))
+            },
         }
     }
 }
