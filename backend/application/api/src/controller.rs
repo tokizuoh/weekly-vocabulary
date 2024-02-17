@@ -165,6 +165,13 @@ impl generated::Api for Api {
                 },
             )),
             Err(e) => {
+                tracing::error!(
+                    "Failed to execute the query: {} at {}/#L{}",
+                    e,
+                    std::module_path!(),
+                    line!()
+                );
+                
                 Ok(VocabularyPostResponse::Status500_InternalServerError)
             },
         }
