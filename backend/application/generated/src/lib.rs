@@ -34,10 +34,6 @@ pub enum VocabularyIdDeleteResponse {
     Status200_OkResponse
     (models::DeleteVocabularyOkResponse)
     ,
-    /// Bad Request
-    Status400_BadRequest
-    (models::Error)
-    ,
     /// Internal Server Error
     Status500_InternalServerError
 }
