@@ -10,8 +10,6 @@ use generated::{
 };
 use mysql::{params, prelude::Queryable, Pool};
 
-use crate::validatable::Validatable;
-
 #[derive(Clone)]
 pub struct Api {
     pub db: Pool,
@@ -129,15 +127,6 @@ impl generated::Api for Api {
             meaning: body.vocabulary.meaning,
         };
 
-        match vocabulary.validate() {
-            true => {}
-            false => {
-                return Ok(VocabularyPostResponse::Status400_BadRequest(
-                    generated::models::Error { message: None },
-                ));
-            }
-        }
-
         match conn.exec_drop(
             r"INSERT INTO vocabulary (spelling, meaning, part_of_speech)
                 VALUES(:spelling, :meaning, :part_of_speech)",
@@ -184,15 +173,6 @@ impl generated::Api for Api {
             part_of_speech: body.vocabulary.part_of_speech,
             spelling: body.vocabulary.spelling,
         };
-
-        match vocabulary.validate() {
-            true => {}
-            false => {
-                return Ok(VocabularyPutResponse::Status400_BadRequest(
-                    generated::models::Error { message: None },
-                ));
-            }
-        }
 
         match conn.exec_drop(
             r"UPDATE vocabulary SET spelling=(:spelling), meaning=(:meaning), part_of_speech=(:part_of_speech), updated_at=CURTIME() WHERE id=(:id);",
