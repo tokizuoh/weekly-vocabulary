@@ -13,10 +13,10 @@ async fn main() {
     let url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let pool = match Pool::new(url.as_str()) {
         Ok(pool) => pool,
-        Err(err) => {
+        Err(e) => {
             tracing::error!(
                 "Failed to connect to tha database: {} at {}/#L{}",
-                err,
+                e,
                 std::module_path!(),
                 line!()
             );
