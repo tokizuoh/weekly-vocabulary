@@ -2,6 +2,7 @@
 
 up-dev:
 	docker-compose up -d application-development mysql-development
+	docker logs -f application-development
 down:
 	docker compose down
 exec:
