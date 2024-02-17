@@ -66,13 +66,7 @@ impl generated::Api for Api {
                 }
             }
             Err(e) => {
-                tracing::error!(
-                    "Failed to execute the query: {} at {}/#L{}",
-                    e,
-                    std::module_path!(),
-                    line!()
-                );
-
+                traicing_error(&e, line!());
                 Ok(VocabularyRecentGetResponse::Status500_InternalServerError)
             }
         }
@@ -104,13 +98,7 @@ impl generated::Api for Api {
                 },
             )),
             Err(e) => {
-                tracing::error!(
-                    "Failed to execute the query: {} at {}/#L{}",
-                    e,
-                    std::module_path!(),
-                    line!()
-                );
-
+                traicing_error(&e, line!());
                 Ok(VocabularyAllGetResponse::Status500_InternalServerError)
             }
         }
@@ -165,13 +153,8 @@ impl generated::Api for Api {
                 },
             )),
             Err(e) => {
-                tracing::error!(
-                    "Failed to execute the query: {} at {}/#L{}",
-                    e,
-                    std::module_path!(),
-                    line!()
-                );
-                
+                traicing_error(&e, line!());
+
                 Ok(VocabularyPostResponse::Status500_InternalServerError)
             },
         }
@@ -226,12 +209,7 @@ impl generated::Api for Api {
                 },
             )),
             Err(e) => {
-                tracing::error!(
-                    "Failed to execute the query: {} at {}/#L{}",
-                    e,
-                    std::module_path!(),
-                    line!()
-                );
+                traicing_error(&e, line!());
                 
                 Ok(VocabularyPutResponse::Status500_InternalServerError)
             },
@@ -259,15 +237,18 @@ impl generated::Api for Api {
                 },
             )),
             Err(e) => {
-                tracing::error!(
-                    "Failed to execute the query: {} at {}/#L{}",
-                    e,
-                    std::module_path!(),
-                    line!()
-                );
-
+                traicing_error(&e, line!());
                 Ok(VocabularyIdDeleteResponse::Status500_InternalServerError)
             },
         }
     }
+}
+
+fn traicing_error(e: &impl std::error::Error, line: u32) {
+    tracing::error!(
+        "Failed to execute the query: {} at {}/#L{}",
+        e,
+        std::module_path!(),
+        line
+    );
 }
